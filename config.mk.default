@@ -1,0 +1,10 @@
+
+REV:=A2
+ENABLE_ASSERTS=1
+WARNINGS=-Wall -Wextra -Werror=implicit-function-declaration
+BUILD_DIR=build$(REV)
+
+ASF4_PREFIX=asf4
+
+ENABLE_LORA=0
+LORA_DEBUG_GPIO=0
