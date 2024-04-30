@@ -302,12 +302,12 @@ drivers:
       enable_gclk_gen_6__externalclock: 1000000
       enable_gclk_gen_7: false
       enable_gclk_gen_7__externalclock: 1000000
-      gclk_arch_gen_0_RUNSTDBY: false
+      gclk_arch_gen_0_RUNSTDBY: true
       gclk_arch_gen_0_enable: true
       gclk_arch_gen_0_idc: false
       gclk_arch_gen_0_oe: false
       gclk_arch_gen_0_oov: false
-      gclk_arch_gen_1_RUNSTDBY: false
+      gclk_arch_gen_1_RUNSTDBY: true
       gclk_arch_gen_1_enable: true
       gclk_arch_gen_1_idc: false
       gclk_arch_gen_1_oe: false
@@ -400,7 +400,7 @@ drivers:
       cpu_clock_source: Generic clock generator 0
       cpu_div: '1'
       enable_cpu_clock: true
-      nvm_wait_states: '0'
+      nvm_wait_states: '1'
     optional_signals: []
     variant: null
     clocks:
@@ -635,11 +635,11 @@ drivers:
           slow_gclk_selection: Generic clock generator 3
   I2C_HOST:
     user_label: I2C_HOST
-    definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::SERCOM5::driver_config_definition::I2C.Master.Standard~2FFast-mode::HAL:Driver:I2C.Master.Sync
+    definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::SERCOM5::driver_config_definition::I2C.Master.Standard~2FFast-mode::HAL:Driver:I2C.Master.Async
     functionality: I2C
-    api: HAL:Driver:I2C_Master_Sync
+    api: HAL:Driver:I2C_Master_Async
     configuration:
-      i2c_master_advanced: true
+      i2c_master_advanced: false
       i2c_master_arch_dbgstop: Keep running
       i2c_master_arch_inactout: Disabled
       i2c_master_arch_lowtout: false
@@ -861,7 +861,7 @@ drivers:
       dmac_dstinc_7: false
       dmac_dstinc_8: false
       dmac_dstinc_9: false
-      dmac_enable: false
+      dmac_enable: true
       dmac_enable_0: false
       dmac_enable_1: false
       dmac_enable_10: false

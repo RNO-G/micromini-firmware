@@ -29,7 +29,7 @@
 #include <hal_spi_m_sync.h>
 #include <hal_spi_m_sync.h>
 
-#include <hal_i2c_m_sync.h>
+#include <hal_i2c_m_async.h>
 
 #include <hal_delay.h>
 
@@ -55,7 +55,7 @@ extern struct spi_m_sync_descriptor  SPIFLASH;
 extern struct spi_m_sync_descriptor  SDCARD;
 extern struct spi_m_sync_descriptor  LORA_SPI;
 
-extern struct i2c_m_sync_desc I2C_HOST;
+extern struct i2c_m_async_desc I2C_HOST;
 
 extern struct calendar_descriptor CALENDAR;
 extern struct timer_descriptor    LORA_TIMER;

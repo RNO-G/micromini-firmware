@@ -148,14 +148,22 @@ void LORA_SPI_example(void)
 	io_write(io, example_LORA_SPI, 12);
 }
 
+static uint8_t I2C_HOST_example_str[12] = "Hello World!";
+
+void I2C_HOST_tx_complete(struct i2c_m_async_desc *const i2c)
+{
+}
+
 void I2C_HOST_example(void)
 {
 	struct io_descriptor *I2C_HOST_io;
 
-	i2c_m_sync_get_io_descriptor(&I2C_HOST, &I2C_HOST_io);
-	i2c_m_sync_enable(&I2C_HOST);
-	i2c_m_sync_set_slaveaddr(&I2C_HOST, 0x12, I2C_M_SEVEN);
-	io_write(I2C_HOST_io, (uint8_t *)"Hello World!", 12);
+	i2c_m_async_get_io_descriptor(&I2C_HOST, &I2C_HOST_io);
+	i2c_m_async_enable(&I2C_HOST);
+	i2c_m_async_register_callback(&I2C_HOST, I2C_M_ASYNC_TX_COMPLETE, (FUNC_PTR)I2C_HOST_tx_complete);
+	i2c_m_async_set_slaveaddr(&I2C_HOST, 0x12, I2C_M_SEVEN);
+
+	io_write(I2C_HOST_io, I2C_HOST_example_str, 12);
 }
 
 void delay_example(void)

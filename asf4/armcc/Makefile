@@ -63,7 +63,6 @@ hpl/nvmctrl/hpl_nvmctrl.o \
 hal/src/hal_spi_m_sync.o \
 hal/src/hal_timer.o \
 hpl/usb/hpl_usb.o \
-hal/src/hal_i2c_m_sync.o \
 hal/src/hal_delay.o \
 samd21a/armcc/Device/SAMD21A/Source/system_samd21.o \
 hpl/sysctrl/hpl_sysctrl.o \
@@ -74,6 +73,7 @@ hal/utils/src/utils_assert.o \
 hpl/dmac/hpl_dmac.o \
 hpl/pm/hpl_pm.o \
 usb/usb_protocol.o \
+hal/src/hal_i2c_m_async.o \
 hpl/sercom/hpl_sercom.o \
 hpl/gclk/hpl_gclk.o \
 hal/src/hal_flash.o \
@@ -111,7 +111,6 @@ OBJS_AS_ARGS +=  \
 "hal/src/hal_spi_m_sync.o" \
 "hal/src/hal_timer.o" \
 "hpl/usb/hpl_usb.o" \
-"hal/src/hal_i2c_m_sync.o" \
 "hal/src/hal_delay.o" \
 "samd21a/armcc/Device/SAMD21A/Source/system_samd21.o" \
 "hpl/sysctrl/hpl_sysctrl.o" \
@@ -122,6 +121,7 @@ OBJS_AS_ARGS +=  \
 "hpl/dmac/hpl_dmac.o" \
 "hpl/pm/hpl_pm.o" \
 "usb/usb_protocol.o" \
+"hal/src/hal_i2c_m_async.o" \
 "hpl/sercom/hpl_sercom.o" \
 "hpl/gclk/hpl_gclk.o" \
 "hal/src/hal_flash.o" \
@@ -160,7 +160,6 @@ DEPS_AS_ARGS +=  \
 "hpl/eic/hpl_eic.d" \
 "hal/src/hal_i2c_s_async.d" \
 "usb/class/cdc/device/cdcdf_acm.d" \
-"hal/src/hal_i2c_m_sync.d" \
 "hpl/usb/hpl_usb.d" \
 "hpl/nvmctrl/hpl_nvmctrl.d" \
 "hal/src/hal_timer.d" \
@@ -181,6 +180,7 @@ DEPS_AS_ARGS +=  \
 "driver_init.d" \
 "hal/src/hal_adc_sync.d" \
 "hal/src/hal_usart_async.d" \
+"hal/src/hal_i2c_m_async.d" \
 "main.d" \
 "examples/driver_examples.d" \
 "hpl/rtc/hpl_rtc.d" \

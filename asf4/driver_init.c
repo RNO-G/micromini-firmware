@@ -34,7 +34,7 @@ struct flash_descriptor FLASH;
 struct i2c_s_async_descriptor I2C_DEVICE;
 uint8_t                       SERCOM0_i2c_s_buffer[SERCOM0_I2CS_BUFFER_SIZE];
 
-struct i2c_m_sync_desc I2C_HOST;
+struct i2c_m_async_desc I2C_HOST;
 
 struct calendar_descriptor CALENDAR;
 
@@ -380,7 +380,7 @@ void I2C_HOST_CLOCK_init(void)
 void I2C_HOST_init(void)
 {
 	I2C_HOST_CLOCK_init();
-	i2c_m_sync_init(&I2C_HOST, SERCOM5);
+	i2c_m_async_init(&I2C_HOST, SERCOM5);
 	I2C_HOST_PORT_init();
 }
 

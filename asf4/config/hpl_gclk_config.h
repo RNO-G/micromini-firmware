@@ -16,7 +16,7 @@
 // <i> Indicates whether Run in Standby is enabled or not
 // <id> gclk_arch_gen_0_RUNSTDBY
 #ifndef CONF_GCLK_GEN_0_RUNSTDBY
-#define CONF_GCLK_GEN_0_RUNSTDBY 0
+#define CONF_GCLK_GEN_0_RUNSTDBY 1
 #endif
 
 // <q> Divide Selection
@@ -92,7 +92,7 @@
 // <i> Indicates whether Run in Standby is enabled or not
 // <id> gclk_arch_gen_1_RUNSTDBY
 #ifndef CONF_GCLK_GEN_1_RUNSTDBY
-#define CONF_GCLK_GEN_1_RUNSTDBY 0
+#define CONF_GCLK_GEN_1_RUNSTDBY 1
 #endif
 
 // <q> Divide Selection
