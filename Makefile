@@ -30,7 +30,7 @@ CFLAGS+= $(WARNINGS)
 
 
 include asf4.mk
-include lorawan.mk
+#include lorawan.mk
 
 
 CC=arm-none-eabi-gcc
@@ -45,7 +45,7 @@ LD_FLAGS_POST=-Llinker/ --specs=nano.specs -mcpu=cortex-m0plus -Wl,--gc-sections
 
 INCLUDES=$(ASF4_INCLUDES) -I./ -Iinclude/
 
-APP_OBJS=spi_flash.o io.o printf.o driver_init.o main.o i2cbus.o i2c_client.o
+APP_OBJS=spi_flash.o io.o printf.o driver_init.o main.o i2c_client.o measurement.o gpio.o time.o i2cbus.o
 
 OBJS=$(ASF4_OBJS) $(LORAWAN_OBJS)
 OBJS+=$(addprefix $(BUILD_DIR)/application/, $(APP_OBJS))
@@ -87,6 +87,9 @@ endif
 %.bin: %.elf
 	$(OC) -O binary $< $@
 
+%.uf2: %.bin
+	-uf2conv.py -i $< -o $@
+
 
 %.hex: %.elf
 	$(OC) -O ihex -R .eeprom -R .fuse -R .lock -R .signature $< $@
@@ -95,17 +98,17 @@ endif
 	$(OC) -j .eeprom --set-section-flags=.eeprom=alloc,load --change-section-lma \
         .eeprom=0 --no-change-warnings -O binary $< \
         $@ || exit 0
-$.lss: %.elf 
-	$(OC) -h -S $< > $@ 
+$.lss: %.elf
+	$(OC) -h -S $< > $@
 
-config.mk: config.mk.default 
-	@echo "Copying config.mk.default to config.mk (backing up old if it exists)" 
-	@ if [ -f "$@" ] ; then  diff  -q $@ $< || cp $@ $@.`date -Is`.backup ;  fi 
+config.mk: config.mk.default
+	@echo "Copying config.mk.default to config.mk (backing up old if it exists)"
+	@ if [ -f "$@" ] ; then  diff  -q $@ $< || cp $@ $@.`date -Is`.backup ;  fi
 	@cp $< $@
 
 $(OUTPUT_NAME).elf: $(OBJS)
 	@echo Building target: $@
-	$(CC) -o $@ $^ $(LD_FLAGS_PRE) -Wl,-Map=$(OUTPUT_NAME).map -Tlinker/main.ld  $(LD_FLAGS_POST) 
+	$(CC) -o $@ $^ $(LD_FLAGS_PRE) -Wl,-Map=$(OUTPUT_NAME).map -Tlinker/main.ld  $(LD_FLAGS_POST)
 	"arm-none-eabi-size" $@
 
 # special case lorawan includes  (so we don't have to modify the reference implementation files)

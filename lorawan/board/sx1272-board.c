@@ -5,8 +5,8 @@
 #include <hal_ext_irq.h>
 #include <hal_gpio.h>
 #include "delay.h"
-#include "shared/printf.h" 
-#include "shared/driver_init.h" 
+#include "application/printf.h" 
+#include "application/driver_init.h" 
 
 
 static uint8_t SX1272GetPaSelect( uint32_t channel );
@@ -56,7 +56,7 @@ void SX1272IoInit( void )
   // most things are set up in driver_init, so we'll jsut do a few things here! 
 
     SX1272.Spi.Nss.pin = LORA_SPI_CS; 
-    SX1272.DIO0.pin = LORA_DIO; 
+    SX1272.DIO0.pin = LORA_DIO0; 
     SX1272.DIO1.pin = LORA_DIO1; 
     SX1272.DIO2.pin = LORA_DIO2; 
     SX1272.DIO3.pin = NC; 

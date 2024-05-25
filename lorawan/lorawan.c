@@ -1,10 +1,10 @@
 
 #include "config/lorawan_config.h" 
 
-#include "shared/printf.h" 
+#include "application/printf.h" 
 #include "application/time.h" 
-#include "shared/spi_flash.h" 
-#include "application/lowpower.h" 
+#include "application/spi_flash.h"
+#include "include/micromini-control.h"
 
 
 #include "lorawan.h" 
@@ -857,9 +857,9 @@ int lorawan_process(int up)
     } // end of switch
 
    //check if lora stats need to be sooner (i.e. we just got out of low power mode) 
-   if (joined && !low_power_mode && (next_lora_stats - up)  > 2*config_block()->app_cfg.lora_stats_interval)
+   if (joined && !low_power_mode && (next_lora_stats - up)  > 2*config_block()->lorawan_stats_interval)
    {
-     next_lora_stats = up + config_block()->app_cfg.lora_stats_interval; 
+     next_lora_stats = up + config_block()->lorawan_stats_interval; 
    }
 
     //see if we need to sent lora stas
@@ -869,8 +869,7 @@ int lorawan_process(int up)
        lorawan_stats(&stats); 
        lorawan_tx_copy(sizeof(stats), RNO_G_MSG_LORA_STATS, (uint8_t*) &stats, 0); 
 
-       int interval = low_power_mode ? config_block()->app_cfg.lora_stats_interval_low_power_mode : config_block()->app_cfg.lora_stats_interval ; 
-       if (interval < 10) interval = 10; 
+       int interval = 600;
        next_lora_stats = up + interval;
        cant_sleep =1; 
    }
@@ -879,8 +878,8 @@ int lorawan_process(int up)
    {
      int have_time = get_time() > 1000000000; 
      should_request_time = 1; 
-     int delay_in_secs = have_time ? config_block()->app_cfg.timesync_interval :  low_power_mode ?  300 : 60; 
-     if (delay_in_secs < 60) delay_in_secs = 60; 
+     int delay_in_secs = have_time ? 3600 : 300;
+     if (delay_in_secs < 60) delay_in_secs = 60;
      time_check = up + delay_in_secs ;
      cant_sleep=1; 
    }

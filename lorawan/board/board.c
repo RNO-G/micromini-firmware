@@ -1,5 +1,4 @@
 #include "board.h" 
-#include "shared/spi_flash.h" 
 
 
 uint32_t BoardGetRandomSeed(void) 
@@ -24,10 +23,18 @@ void BoardGetUniqueId( uint16_t *id )
 {
   if (iid < 0) 
   {
-    iid = config_block()->app_cfg.station_number;  
+    uint32_t val1, val2, val3, val4;
+    uint32_t *ptr1 = (volatile uint32_t *)0x0080A00C;
+    val1 = *ptr1;
+    uint32_t *ptr = (volatile uint32_t *)0x0080A040;
+    val2 = *ptr;
+    ptr++;
+    val3 = *ptr;
+    ptr++;
+    val4 = *ptr;
+    iid = (val1 ^ val2 ^ val3 ^val4) >> 16;
   }
-  *id = (uint16_t) iid; 
-
+  *id = (uint16_t) iid;
 }
 
 
@@ -35,5 +42,5 @@ void BoardGetUniqueId( uint16_t *id )
 Version_t BoardGetVersion( void )
 {
   Version_t v = {.Value = 0}; 
-  return v; 
+  return v;
 }

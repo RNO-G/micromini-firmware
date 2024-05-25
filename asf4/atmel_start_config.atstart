@@ -1246,17 +1246,17 @@ pads:
     mode: Digital input
     user_label: W1_GPIO
     configuration: null
-  PA08:
+  I2C_DEVICE_SDA:
     name: PA08
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PA08
     mode: I2C
-    user_label: PA08
+    user_label: I2C_DEVICE_SDA
     configuration: null
-  PA09:
+  I2C_CLIENT_SCL:
     name: PA09
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PA09
     mode: I2C
-    user_label: PA09
+    user_label: I2C_CLIENT_SCL
     configuration: null
   LORA_DIO0:
     name: PA10
@@ -1276,29 +1276,36 @@ pads:
     mode: Digital input
     user_label: AUX_ENABLE
     configuration: null
-  PB12:
+  LORA_SPI_MISO:
     name: PB12
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PB12
     mode: Digital input
-    user_label: PB12
+    user_label: LORA_SPI_MISO
     configuration: null
-  PB14:
+  LORA_SPI_CS:
+    name: PB13
+    definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PB13
+    mode: Digital output
+    user_label: LORA_SPI_CS
+    configuration:
+      pad_initial_level: High
+  LORA_SPI_MOSI:
     name: PB14
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PB14
     mode: Digital output
-    user_label: PB14
+    user_label: LORA_SPI_MOSI
     configuration: null
-  PB15:
+  LORA_SPI_SCLK:
     name: PB15
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PB15
     mode: Digital output
-    user_label: PB15
+    user_label: LORA_SPI_SCLK
     configuration: null
-  PA12:
+  SPIFLASH_MISO:
     name: PA12
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PA12
     mode: Digital input
-    user_label: PA12
+    user_label: SPIFLASH_MISO
     configuration: null
   SPIFLASH_CS:
     name: PA13
@@ -1306,29 +1313,29 @@ pads:
     mode: Digital input
     user_label: SPIFLASH_CS
     configuration: null
-  PA14:
+  SPIFLASH_MOSI:
     name: PA14
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PA14
     mode: Digital output
-    user_label: PA14
+    user_label: SPIFLASH_MOSI
     configuration: null
-  PA15:
+  SPIFLASH_SCLK:
     name: PA15
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PA15
     mode: Digital output
-    user_label: PA15
+    user_label: SPIFLASH_SCLK
     configuration: null
-  PA16:
+  EXTUART_TX:
     name: PA16
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PA16
     mode: Peripheral IO
-    user_label: PA16
+    user_label: EXTUART_TX
     configuration: null
-  PA17:
+  EXTUART_RX:
     name: PA17
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PA17
     mode: Peripheral IO
-    user_label: PA17
+    user_label: EXTUART_RX
     configuration: null
   EXT_GPIO0:
     name: PA18
@@ -1348,23 +1355,23 @@ pads:
     mode: Digital input
     user_label: NALERT
     configuration: null
-  PA20:
+  SDCARD_MOSI:
     name: PA20
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PA20
     mode: Digital output
-    user_label: PA20
+    user_label: SDCARD_MOSI
     configuration: null
-  PA21:
+  SDCARD_SCLK:
     name: PA21
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PA21
     mode: Digital output
-    user_label: PA21
+    user_label: SDCARD_SCLK
     configuration: null
-  PA22:
+  SDCARD_MISO:
     name: PA22
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PA22
     mode: Digital input
-    user_label: PA22
+    user_label: SDCARD_MISO
     configuration: null
   SDCARD_CS:
     name: PA23
@@ -1372,29 +1379,29 @@ pads:
     mode: Digital input
     user_label: SDCARD_CS
     configuration: null
-  PA24:
+  USB_DMINUS:
     name: PA24
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PA24
     mode: Advanced
-    user_label: PA24
+    user_label: USB_DMINUS
     configuration: null
-  PA25:
+  USB_DPLUS:
     name: PA25
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PA25
     mode: Advanced
-    user_label: PA25
+    user_label: USB_DPLUS
     configuration: null
-  PB30:
+  I2C_HOST_SDA:
     name: PB30
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PB30
     mode: I2C
-    user_label: PB30
+    user_label: I2C_HOST_SDA
     configuration: null
-  PB31:
+  I2C_HOST_SCL:
     name: PB31
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PB31
     mode: I2C
-    user_label: PB31
+    user_label: I2C_HOST_SCL
     configuration: null
   W1_SLEEP:
     name: PB00

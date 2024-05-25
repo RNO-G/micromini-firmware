@@ -26,8 +26,8 @@
 #include "rtc-board.h"
 #include "systime.h"
 #include "application/time.h" 
-#include "shared/driver_init.h"
-#include "shared/spi_flash.h"
+#include "application/driver_init.h"
+#define GPS_OFFSET 18
 
 #define END_OF_FEBRUARY_LEAP                         60 //31+29
 #define END_OF_JULY_LEAP                            213 //31+29+...
@@ -119,7 +119,7 @@ void SysTimeSet( SysTime_t sysTime )
 
     //Now set it for the calendar instance 
 
-    set_time(sysTime.Seconds - config_block()->app_cfg.gps_offset); 
+    set_time(sysTime.Seconds - GPS_OFFSET); 
 
     /*
     struct calendar_date d; 

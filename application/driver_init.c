@@ -112,7 +112,7 @@ void FLASH_init(void)
 void I2C_DEVICE_PORT_init(void)
 {
 
-	gpio_set_pin_pull_mode(PA08,
+	gpio_set_pin_pull_mode(I2C_DEVICE_SDA,
 	                       // <y> Pull configuration
 	                       // <id> pad_pull_config
 	                       // <GPIO_PULL_OFF"> Off
@@ -120,9 +120,9 @@ void I2C_DEVICE_PORT_init(void)
 	                       // <GPIO_PULL_DOWN"> Pull-down
 	                       GPIO_PULL_OFF);
 
-	gpio_set_pin_function(PA08, PINMUX_PA08C_SERCOM0_PAD0);
+	gpio_set_pin_function(I2C_DEVICE_SDA, PINMUX_PA08C_SERCOM0_PAD0);
 
-	gpio_set_pin_pull_mode(PA09,
+	gpio_set_pin_pull_mode(I2C_CLIENT_SCL,
 	                       // <y> Pull configuration
 	                       // <id> pad_pull_config
 	                       // <GPIO_PULL_OFF"> Off
@@ -130,7 +130,7 @@ void I2C_DEVICE_PORT_init(void)
 	                       // <GPIO_PULL_DOWN"> Pull-down
 	                       GPIO_PULL_OFF);
 
-	gpio_set_pin_function(PA09, PINMUX_PA09C_SERCOM0_PAD1);
+	gpio_set_pin_function(I2C_CLIENT_SCL, PINMUX_PA09C_SERCOM0_PAD1);
 }
 
 void I2C_DEVICE_CLOCK_init(void)
@@ -167,9 +167,9 @@ void EXT_USART_CLOCK_init()
 void EXT_USART_PORT_init()
 {
 
-	gpio_set_pin_function(PA16, PINMUX_PA16C_SERCOM1_PAD0);
+	gpio_set_pin_function(EXTUART_TX, PINMUX_PA16C_SERCOM1_PAD0);
 
-	gpio_set_pin_function(PA17, PINMUX_PA17C_SERCOM1_PAD1);
+	gpio_set_pin_function(EXTUART_RX, PINMUX_PA17C_SERCOM1_PAD1);
 }
 
 /**
@@ -188,9 +188,9 @@ void SPIFLASH_PORT_init(void)
 {
 
 	// Set pin direction to input
-	gpio_set_pin_direction(PA12, GPIO_DIRECTION_IN);
+	gpio_set_pin_direction(SPIFLASH_MISO, GPIO_DIRECTION_IN);
 
-	gpio_set_pin_pull_mode(PA12,
+	gpio_set_pin_pull_mode(SPIFLASH_MISO,
 	                       // <y> Pull configuration
 	                       // <id> pad_pull_config
 	                       // <GPIO_PULL_OFF"> Off
@@ -198,9 +198,9 @@ void SPIFLASH_PORT_init(void)
 	                       // <GPIO_PULL_DOWN"> Pull-down
 	                       GPIO_PULL_OFF);
 
-	gpio_set_pin_function(PA12, PINMUX_PA12C_SERCOM2_PAD0);
+	gpio_set_pin_function(SPIFLASH_MISO, PINMUX_PA12C_SERCOM2_PAD0);
 
-	gpio_set_pin_level(PA14,
+	gpio_set_pin_level(SPIFLASH_MOSI,
 	                   // <y> Initial level
 	                   // <id> pad_initial_level
 	                   // <false"> Low
@@ -208,11 +208,11 @@ void SPIFLASH_PORT_init(void)
 	                   false);
 
 	// Set pin direction to output
-	gpio_set_pin_direction(PA14, GPIO_DIRECTION_OUT);
+	gpio_set_pin_direction(SPIFLASH_MOSI, GPIO_DIRECTION_OUT);
 
-	gpio_set_pin_function(PA14, PINMUX_PA14C_SERCOM2_PAD2);
+	gpio_set_pin_function(SPIFLASH_MOSI, PINMUX_PA14C_SERCOM2_PAD2);
 
-	gpio_set_pin_level(PA15,
+	gpio_set_pin_level(SPIFLASH_SCLK,
 	                   // <y> Initial level
 	                   // <id> pad_initial_level
 	                   // <false"> Low
@@ -220,9 +220,9 @@ void SPIFLASH_PORT_init(void)
 	                   false);
 
 	// Set pin direction to output
-	gpio_set_pin_direction(PA15, GPIO_DIRECTION_OUT);
+	gpio_set_pin_direction(SPIFLASH_SCLK, GPIO_DIRECTION_OUT);
 
-	gpio_set_pin_function(PA15, PINMUX_PA15C_SERCOM2_PAD3);
+	gpio_set_pin_function(SPIFLASH_SCLK, PINMUX_PA15C_SERCOM2_PAD3);
 }
 
 void SPIFLASH_CLOCK_init(void)
@@ -242,9 +242,9 @@ void SDCARD_PORT_init(void)
 {
 
 	// Set pin direction to input
-	gpio_set_pin_direction(PA22, GPIO_DIRECTION_IN);
+	gpio_set_pin_direction(SDCARD_MISO, GPIO_DIRECTION_IN);
 
-	gpio_set_pin_pull_mode(PA22,
+	gpio_set_pin_pull_mode(SDCARD_MISO,
 	                       // <y> Pull configuration
 	                       // <id> pad_pull_config
 	                       // <GPIO_PULL_OFF"> Off
@@ -252,9 +252,9 @@ void SDCARD_PORT_init(void)
 	                       // <GPIO_PULL_DOWN"> Pull-down
 	                       GPIO_PULL_OFF);
 
-	gpio_set_pin_function(PA22, PINMUX_PA22C_SERCOM3_PAD0);
+	gpio_set_pin_function(SDCARD_MISO, PINMUX_PA22C_SERCOM3_PAD0);
 
-	gpio_set_pin_level(PA20,
+	gpio_set_pin_level(SDCARD_MOSI,
 	                   // <y> Initial level
 	                   // <id> pad_initial_level
 	                   // <false"> Low
@@ -262,11 +262,11 @@ void SDCARD_PORT_init(void)
 	                   false);
 
 	// Set pin direction to output
-	gpio_set_pin_direction(PA20, GPIO_DIRECTION_OUT);
+	gpio_set_pin_direction(SDCARD_MOSI, GPIO_DIRECTION_OUT);
 
-	gpio_set_pin_function(PA20, PINMUX_PA20D_SERCOM3_PAD2);
+	gpio_set_pin_function(SDCARD_MOSI, PINMUX_PA20D_SERCOM3_PAD2);
 
-	gpio_set_pin_level(PA21,
+	gpio_set_pin_level(SDCARD_SCLK,
 	                   // <y> Initial level
 	                   // <id> pad_initial_level
 	                   // <false"> Low
@@ -274,9 +274,9 @@ void SDCARD_PORT_init(void)
 	                   false);
 
 	// Set pin direction to output
-	gpio_set_pin_direction(PA21, GPIO_DIRECTION_OUT);
+	gpio_set_pin_direction(SDCARD_SCLK, GPIO_DIRECTION_OUT);
 
-	gpio_set_pin_function(PA21, PINMUX_PA21D_SERCOM3_PAD3);
+	gpio_set_pin_function(SDCARD_SCLK, PINMUX_PA21D_SERCOM3_PAD3);
 }
 
 void SDCARD_CLOCK_init(void)
@@ -296,9 +296,9 @@ void LORA_SPI_PORT_init(void)
 {
 
 	// Set pin direction to input
-	gpio_set_pin_direction(PB12, GPIO_DIRECTION_IN);
+	gpio_set_pin_direction(LORA_SPI_MISO, GPIO_DIRECTION_IN);
 
-	gpio_set_pin_pull_mode(PB12,
+	gpio_set_pin_pull_mode(LORA_SPI_MISO,
 	                       // <y> Pull configuration
 	                       // <id> pad_pull_config
 	                       // <GPIO_PULL_OFF"> Off
@@ -306,9 +306,9 @@ void LORA_SPI_PORT_init(void)
 	                       // <GPIO_PULL_DOWN"> Pull-down
 	                       GPIO_PULL_OFF);
 
-	gpio_set_pin_function(PB12, PINMUX_PB12C_SERCOM4_PAD0);
+	gpio_set_pin_function(LORA_SPI_MISO, PINMUX_PB12C_SERCOM4_PAD0);
 
-	gpio_set_pin_level(PB14,
+	gpio_set_pin_level(LORA_SPI_MOSI,
 	                   // <y> Initial level
 	                   // <id> pad_initial_level
 	                   // <false"> Low
@@ -316,11 +316,11 @@ void LORA_SPI_PORT_init(void)
 	                   false);
 
 	// Set pin direction to output
-	gpio_set_pin_direction(PB14, GPIO_DIRECTION_OUT);
+	gpio_set_pin_direction(LORA_SPI_MOSI, GPIO_DIRECTION_OUT);
 
-	gpio_set_pin_function(PB14, PINMUX_PB14C_SERCOM4_PAD2);
+	gpio_set_pin_function(LORA_SPI_MOSI, PINMUX_PB14C_SERCOM4_PAD2);
 
-	gpio_set_pin_level(PB15,
+	gpio_set_pin_level(LORA_SPI_SCLK,
 	                   // <y> Initial level
 	                   // <id> pad_initial_level
 	                   // <false"> Low
@@ -328,9 +328,9 @@ void LORA_SPI_PORT_init(void)
 	                   false);
 
 	// Set pin direction to output
-	gpio_set_pin_direction(PB15, GPIO_DIRECTION_OUT);
+	gpio_set_pin_direction(LORA_SPI_SCLK, GPIO_DIRECTION_OUT);
 
-	gpio_set_pin_function(PB15, PINMUX_PB15C_SERCOM4_PAD3);
+	gpio_set_pin_function(LORA_SPI_SCLK, PINMUX_PB15C_SERCOM4_PAD3);
 }
 
 void LORA_SPI_CLOCK_init(void)
@@ -349,7 +349,7 @@ void LORA_SPI_init(void)
 void I2C_HOST_PORT_init(void)
 {
 
-	gpio_set_pin_pull_mode(PB30,
+	gpio_set_pin_pull_mode(I2C_HOST_SDA,
 	                       // <y> Pull configuration
 	                       // <id> pad_pull_config
 	                       // <GPIO_PULL_OFF"> Off
@@ -357,9 +357,9 @@ void I2C_HOST_PORT_init(void)
 	                       // <GPIO_PULL_DOWN"> Pull-down
 	                       GPIO_PULL_OFF);
 
-	gpio_set_pin_function(PB30, PINMUX_PB30D_SERCOM5_PAD0);
+	gpio_set_pin_function(I2C_HOST_SDA, PINMUX_PB30D_SERCOM5_PAD0);
 
-	gpio_set_pin_pull_mode(PB31,
+	gpio_set_pin_pull_mode(I2C_HOST_SCL,
 	                       // <y> Pull configuration
 	                       // <id> pad_pull_config
 	                       // <GPIO_PULL_OFF"> Off
@@ -367,7 +367,7 @@ void I2C_HOST_PORT_init(void)
 	                       // <GPIO_PULL_DOWN"> Pull-down
 	                       GPIO_PULL_OFF);
 
-	gpio_set_pin_function(PB31, PINMUX_PB31D_SERCOM5_PAD1);
+	gpio_set_pin_function(I2C_HOST_SCL, PINMUX_PB31D_SERCOM5_PAD1);
 }
 
 void I2C_HOST_CLOCK_init(void)
@@ -430,7 +430,7 @@ static void SHARED_TIMER_init(void)
 void USB_0_PORT_init(void)
 {
 
-	gpio_set_pin_direction(PA24,
+	gpio_set_pin_direction(USB_DMINUS,
 	                       // <y> Pin direction
 	                       // <id> pad_direction
 	                       // <GPIO_DIRECTION_OFF"> Off
@@ -438,14 +438,14 @@ void USB_0_PORT_init(void)
 	                       // <GPIO_DIRECTION_OUT"> Out
 	                       GPIO_DIRECTION_OUT);
 
-	gpio_set_pin_level(PA24,
+	gpio_set_pin_level(USB_DMINUS,
 	                   // <y> Initial level
 	                   // <id> pad_initial_level
 	                   // <false"> Low
 	                   // <true"> High
 	                   false);
 
-	gpio_set_pin_pull_mode(PA24,
+	gpio_set_pin_pull_mode(USB_DMINUS,
 	                       // <y> Pull configuration
 	                       // <id> pad_pull_config
 	                       // <GPIO_PULL_OFF"> Off
@@ -453,7 +453,7 @@ void USB_0_PORT_init(void)
 	                       // <GPIO_PULL_DOWN"> Pull-down
 	                       GPIO_PULL_OFF);
 
-	gpio_set_pin_function(PA24,
+	gpio_set_pin_function(USB_DMINUS,
 	                      // <y> Pin function
 	                      // <id> pad_function
 	                      // <i> Auto : use driver pinmux if signal is imported by driver, else turn off function
@@ -469,7 +469,7 @@ void USB_0_PORT_init(void)
 	                      // <GPIO_PIN_FUNCTION_H"> H
 	                      PINMUX_PA24G_USB_DM);
 
-	gpio_set_pin_direction(PA25,
+	gpio_set_pin_direction(USB_DPLUS,
 	                       // <y> Pin direction
 	                       // <id> pad_direction
 	                       // <GPIO_DIRECTION_OFF"> Off
@@ -477,14 +477,14 @@ void USB_0_PORT_init(void)
 	                       // <GPIO_DIRECTION_OUT"> Out
 	                       GPIO_DIRECTION_OUT);
 
-	gpio_set_pin_level(PA25,
+	gpio_set_pin_level(USB_DPLUS,
 	                   // <y> Initial level
 	                   // <id> pad_initial_level
 	                   // <false"> Low
 	                   // <true"> High
 	                   false);
 
-	gpio_set_pin_pull_mode(PA25,
+	gpio_set_pin_pull_mode(USB_DPLUS,
 	                       // <y> Pull configuration
 	                       // <id> pad_pull_config
 	                       // <GPIO_PULL_OFF"> Off
@@ -492,7 +492,7 @@ void USB_0_PORT_init(void)
 	                       // <GPIO_PULL_DOWN"> Pull-down
 	                       GPIO_PULL_OFF);
 
-	gpio_set_pin_function(PA25,
+	gpio_set_pin_function(USB_DPLUS,
 	                      // <y> Pin function
 	                      // <id> pad_function
 	                      // <i> Auto : use driver pinmux if signal is imported by driver, else turn off function
@@ -683,18 +683,25 @@ void system_init(void)
 
 	// GPIO on PB10
 
-	// Set pin direction to input
-	gpio_set_pin_direction(AUX_ENABLE, GPIO_DIRECTION_IN);
+	gpio_set_pin_level(AUX_ENABLE, true);
+	gpio_set_pin_direction(AUX_ENABLE, GPIO_DIRECTION_OUT);
 
-	gpio_set_pin_pull_mode(AUX_ENABLE,
-	                       // <y> Pull configuration
-	                       // <id> pad_pull_config
-	                       // <GPIO_PULL_OFF"> Off
-	                       // <GPIO_PULL_UP"> Pull-up
-	                       // <GPIO_PULL_DOWN"> Pull-down
-	                       GPIO_PULL_OFF);
 
 	gpio_set_pin_function(AUX_ENABLE, GPIO_PIN_FUNCTION_OFF);
+
+	// GPIO on PB13
+
+	gpio_set_pin_level(LORA_SPI_CS,
+	                   // <y> Initial level
+	                   // <id> pad_initial_level
+	                   // <false"> Low
+	                   // <true"> High
+	                   true);
+
+	// Set pin direction to output
+	gpio_set_pin_direction(LORA_SPI_CS, GPIO_DIRECTION_OUT);
+
+	gpio_set_pin_function(LORA_SPI_CS, GPIO_PIN_FUNCTION_OFF);
 
 	// GPIO on PB16
 

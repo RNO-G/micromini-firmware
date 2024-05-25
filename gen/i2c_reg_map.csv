@@ -1,0 +1,33 @@
+REG, TYPE,NAME, DESCRIPTION
+0x00, R, ID, returns 0xab
+0x10, W, MEASURE, queue a new measurement
+0x11, R, MEASUREMENT_AGE, age of last measurement in seconds ( saturating at 255)
+0x12, R, NMEASUREMENTS, number of measurements taken (wrapping)
+0x20, R, PV_LSB, LSB of PV measurement
+0x21, R, PV_MSB, MSB of PV measurement
+0x22, R, TURBINE_LSB, LSB of Turbine measurement
+0x23, R, TURBINE_MSB, MSB of Turbine measurement
+0x24, R, DELTA_PV_LSB, LSB of PV measurement
+0x25, R, DELTA_PV_MSB, MSB of PV measurement
+0x26, R, DELTA_TURBINE_LSB, LSB of Turbine measurement
+0x27, R, DELTA_TURBINE_MSB, MSB of Turbine measurement
+0x40, R, WHEN_BYTE_0, LSB byte of uptime at time of measurement
+0x41, R, WHEN_BYTE_1, next to LSB byte of uptime at time of measurement
+0x42, R, WHEN_BYTE_2, next to next to  LSB byte of uptime at time of measurement
+0x43, R, WHEN_BYTE_3, MSB byte of uptime at time of measurement
+0x50, R, T_LOCAL_MSB, MSB of local temperature sensor
+0x51, R, T_LOCAL_LSB, LSB of local temperature sensor
+0x52, R, T1_MSB, MSB of T1 sensor
+0x53, R, T1_LSB, LSB of T1 sensor
+0x54, R, T2_MSB, MSB of T2 sensor
+0x55, R, T2_LSB, LSB of T2 sensor
+0x60, R, BAT_MON_LSB, LSB of battery monitor ADC
+0x61, R, BAT_MON_MSB, MSB of battery monitor ADC
+0x62, R, AIN1_MON_LSB, LSB of AIN1 ADC
+0x63, R, AIN1_MON_MSB, MSB of AIN1 ADC
+0x64, R, AIN12_MON_LSB, LSB of AIN12 ADC
+0x65, R, AIN12_MON_MSB, MSB of AIN12 ADC
+0x66, R, AIN13_MON_LSB, LSB of AIN13 ADC
+0x67, R, AIN13_MON_MSB, MSB of AIN13 ADC
+0x90, RW, WRITE_GPIOS, "Write GPIOS  (bit0 = AUX_EN). First send mask, then send values. Set mask to 0 to not change (then values are don't care or optional). Will read back previous value."
+0xa0, R, READ_GPIOS,READ GPIOS  (bit0 = ALERT)

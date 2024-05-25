@@ -24,12 +24,13 @@
 #include <hal_flash.h>
 
 #include <hal_i2c_s_async.h>
+#include <hal_i2c_m_async.h>
 #include <hal_usart_async.h>
 #include <hal_spi_m_sync.h>
 #include <hal_spi_m_sync.h>
 #include <hal_spi_m_sync.h>
 
-#include <hal_i2c_m_async.h>
+#include <hal_i2c_m_sync.h>
 
 #include <hal_delay.h>
 

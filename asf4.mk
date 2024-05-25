@@ -10,7 +10,7 @@ usb/class/cdc/device \
 usb
 
 
-ASF4_DIRS = \
+ASF4_DIRS = $(ASF4_USB_DIRS) \
 hpl/tc \
 hpl/systick \
 samd21a/gcc/gcc \
@@ -37,7 +37,7 @@ ASF4_USB_INCLUDES = \
 -I$(ASF4_PREFIX)/usb/device \
 
 
-ASF4_INCLUDES = \
+ASF4_INCLUDES = $(ASF4_USB_INCLUDES) \
 -I$(ASF4_PREFIX)/ \
 -I$(ASF4_PREFIX)/config \
 -I$(ASF4_PREFIX)/hal/include \
@@ -72,9 +72,9 @@ hpl/usb/hpl_usb.o \
 usb/device/usbdc.o \
 usb/usb_protocol.o \
 hal/src/hal_init.o \
-hal/src/hal_usb_device.o 
+hal/src/hal_usb_device.o
 
-ASF4_OBJS =  \
+ASF4_OBJS = $(ASF4_USB_OBJS) \
 hal/src/hal_io.o \
 hpl/systick/hpl_systick.o \
 hal/src/hal_calendar.o \

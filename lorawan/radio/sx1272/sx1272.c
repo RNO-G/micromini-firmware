@@ -20,7 +20,6 @@
  *
  * \author    Gregory Cristian ( Semtech )
  */
-//#include "shared/printf.h" 
 #include <math.h>
 #include <string.h>
 #include "utilities.h"
@@ -29,7 +28,7 @@
 #include "delay.h"
 #include "sx1272.h"
 #include "sx1272-board.h"
-#include "shared/printf.h" 
+#include "application/printf.h" 
 
 /*
  * Local types definition

@@ -1,0 +1,2 @@
+#define ENABLE_WATCHDOG 1
+#define ENABLE_WATCHDOG_EW 1

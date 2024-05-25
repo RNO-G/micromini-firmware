@@ -10,7 +10,7 @@
 
 
 #define MCU_PINS \
-  LORA_PIN_DIO0 = LORA_DIO,       \
+  LORA_PIN_DIO0 = LORA_DIO0,       \
   LORA_PIN_DIO1 = LORA_DIO1,      \
   LORA_PIN_DIO2 = LORA_DIO2,      \
   LORA_PIN_RESET = LORA_RESET,    \

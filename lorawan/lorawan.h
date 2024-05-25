@@ -5,7 +5,6 @@
 
 
 #include <stdint.h> 
-#include "rno-g-control.h" 
 
 
 typedef enum e_lwan_msg_flags
@@ -63,7 +62,7 @@ int lorawan_rx_pop();
 
 int lorawan_last_recv(); 
 
-void lorawan_stats(rno_g_lora_stats_t * stats); 
+//void lorawan_stats(rno_g_lora_stats_t * stats); 
 
 
 #endif
