@@ -52,7 +52,7 @@
 // <i> When enabled, the ADC is in free running mode and a new conversion will be initiated when a previous conversion completes. (FREERUN)
 // <id> adc_freerunning_mode
 #ifndef CONF_ADC_0_FREERUN
-#define CONF_ADC_0_FREERUN 0
+#define CONF_ADC_0_FREERUN 1
 #endif
 
 // <q> Differential Mode
@@ -108,7 +108,7 @@
 // <i> These bits define the Mux selection for the negative ADC input. (MUXNEG)
 // <id> adc_pinmux_negative
 #ifndef CONF_ADC_0_MUXNEG
-#define CONF_ADC_0_MUXNEG 0x0
+#define CONF_ADC_0_MUXNEG 0x19
 #endif
 
 // </h>
