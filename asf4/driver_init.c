@@ -13,21 +13,16 @@
 #include <hpl_gclk_base.h>
 #include <hpl_pm_base.h>
 
-#include <hpl_adc_base.h>
-
 /*! The buffer size for USART */
 #define EXT_USART_BUFFER_SIZE 16
 
+struct adc_dma_descriptor     ANALOGIN;
 struct usart_async_descriptor EXT_USART;
 struct spi_m_sync_descriptor  SPIFLASH;
 struct spi_m_sync_descriptor  SDCARD;
-struct spi_m_sync_descriptor  LORA_SPI;
-struct timer_descriptor       LORA_TIMER;
 struct timer_descriptor       SHARED_TIMER;
 
 static uint8_t EXT_USART_buffer[EXT_USART_BUFFER_SIZE];
-
-struct adc_sync_descriptor ANALOGIN;
 
 struct flash_descriptor FLASH;
 
@@ -40,8 +35,17 @@ struct calendar_descriptor CALENDAR;
 
 struct wdt_descriptor INTERNAL_WATCHDOG;
 
-void ANALOGIN_PORT_init(void)
+/**
+ * \brief ADC initialization function
+ *
+ * Enables ADC peripheral, clocks and initializes ADC driver
+ */
+static void ANALOGIN_init(void)
 {
+	_pm_enable_bus_clock(PM_BUS_APBC, ADC);
+	_gclk_enable_channel(ADC_GCLK_ID, CONF_GCLK_ADC_SRC);
+
+	adc_dma_init(&ANALOGIN, ADC);
 
 	// Disable digital pin circuitry
 	gpio_set_pin_direction(AIN1, GPIO_DIRECTION_OFF);
@@ -62,39 +66,6 @@ void ANALOGIN_PORT_init(void)
 	gpio_set_pin_direction(BAT_MON, GPIO_DIRECTION_OFF);
 
 	gpio_set_pin_function(BAT_MON, PINMUX_PB06B_ADC_AIN14);
-}
-
-void ANALOGIN_CLOCK_init(void)
-{
-	_pm_enable_bus_clock(PM_BUS_APBC, ADC);
-	_gclk_enable_channel(ADC_GCLK_ID, CONF_GCLK_ADC_SRC);
-}
-
-void ANALOGIN_init(void)
-{
-	ANALOGIN_CLOCK_init();
-	ANALOGIN_PORT_init();
-	adc_sync_init(&ANALOGIN, ADC, (void *)NULL);
-}
-
-void EXTERNAL_IRQ_0_init(void)
-{
-	_gclk_enable_channel(EIC_GCLK_ID, CONF_GCLK_EIC_SRC);
-
-	// Set pin direction to input
-	gpio_set_pin_direction(W1_GPIO, GPIO_DIRECTION_IN);
-
-	gpio_set_pin_pull_mode(W1_GPIO,
-	                       // <y> Pull configuration
-	                       // <id> pad_pull_config
-	                       // <GPIO_PULL_OFF"> Off
-	                       // <GPIO_PULL_UP"> Pull-up
-	                       // <GPIO_PULL_DOWN"> Pull-down
-	                       GPIO_PULL_OFF);
-
-	gpio_set_pin_function(W1_GPIO, PINMUX_PA07A_EIC_EXTINT7);
-
-	ext_irq_init();
 }
 
 void FLASH_CLOCK_init(void)
@@ -292,60 +263,6 @@ void SDCARD_init(void)
 	SDCARD_PORT_init();
 }
 
-void LORA_SPI_PORT_init(void)
-{
-
-	// Set pin direction to input
-	gpio_set_pin_direction(LORA_SPI_MISO, GPIO_DIRECTION_IN);
-
-	gpio_set_pin_pull_mode(LORA_SPI_MISO,
-	                       // <y> Pull configuration
-	                       // <id> pad_pull_config
-	                       // <GPIO_PULL_OFF"> Off
-	                       // <GPIO_PULL_UP"> Pull-up
-	                       // <GPIO_PULL_DOWN"> Pull-down
-	                       GPIO_PULL_OFF);
-
-	gpio_set_pin_function(LORA_SPI_MISO, PINMUX_PB12C_SERCOM4_PAD0);
-
-	gpio_set_pin_level(LORA_SPI_MOSI,
-	                   // <y> Initial level
-	                   // <id> pad_initial_level
-	                   // <false"> Low
-	                   // <true"> High
-	                   false);
-
-	// Set pin direction to output
-	gpio_set_pin_direction(LORA_SPI_MOSI, GPIO_DIRECTION_OUT);
-
-	gpio_set_pin_function(LORA_SPI_MOSI, PINMUX_PB14C_SERCOM4_PAD2);
-
-	gpio_set_pin_level(LORA_SPI_SCLK,
-	                   // <y> Initial level
-	                   // <id> pad_initial_level
-	                   // <false"> Low
-	                   // <true"> High
-	                   false);
-
-	// Set pin direction to output
-	gpio_set_pin_direction(LORA_SPI_SCLK, GPIO_DIRECTION_OUT);
-
-	gpio_set_pin_function(LORA_SPI_SCLK, PINMUX_PB15C_SERCOM4_PAD3);
-}
-
-void LORA_SPI_CLOCK_init(void)
-{
-	_pm_enable_bus_clock(PM_BUS_APBC, SERCOM4);
-	_gclk_enable_channel(SERCOM4_GCLK_ID_CORE, CONF_GCLK_SERCOM4_CORE_SRC);
-}
-
-void LORA_SPI_init(void)
-{
-	LORA_SPI_CLOCK_init();
-	spi_m_sync_init(&LORA_SPI, SERCOM4);
-	LORA_SPI_PORT_init();
-}
-
 void I2C_HOST_PORT_init(void)
 {
 
@@ -399,19 +316,6 @@ void CALENDAR_init(void)
 {
 	CALENDAR_CLOCK_init();
 	calendar_init(&CALENDAR, RTC);
-}
-
-/**
- * \brief Timer initialization function
- *
- * Enables Timer peripheral, clocks and initializes Timer driver
- */
-static void LORA_TIMER_init(void)
-{
-	_pm_enable_bus_clock(PM_BUS_APBC, TC3);
-	_gclk_enable_channel(TC3_GCLK_ID, CONF_GCLK_TC3_SRC);
-
-	timer_init(&LORA_TIMER, TC3, _tc_get_timer());
 }
 
 /**
@@ -546,66 +450,6 @@ void system_init(void)
 {
 	init_mcu();
 
-	// GPIO on PA05
-
-	// Set pin direction to input
-	gpio_set_pin_direction(LORA_DIO2, GPIO_DIRECTION_IN);
-
-	gpio_set_pin_pull_mode(LORA_DIO2,
-	                       // <y> Pull configuration
-	                       // <id> pad_pull_config
-	                       // <GPIO_PULL_OFF"> Off
-	                       // <GPIO_PULL_UP"> Pull-up
-	                       // <GPIO_PULL_DOWN"> Pull-down
-	                       GPIO_PULL_OFF);
-
-	gpio_set_pin_function(LORA_DIO2, GPIO_PIN_FUNCTION_OFF);
-
-	// GPIO on PA06
-
-	// Set pin direction to input
-	gpio_set_pin_direction(LORA_DIO1, GPIO_DIRECTION_IN);
-
-	gpio_set_pin_pull_mode(LORA_DIO1,
-	                       // <y> Pull configuration
-	                       // <id> pad_pull_config
-	                       // <GPIO_PULL_OFF"> Off
-	                       // <GPIO_PULL_UP"> Pull-up
-	                       // <GPIO_PULL_DOWN"> Pull-down
-	                       GPIO_PULL_OFF);
-
-	gpio_set_pin_function(LORA_DIO1, GPIO_PIN_FUNCTION_OFF);
-
-	// GPIO on PA10
-
-	// Set pin direction to input
-	gpio_set_pin_direction(LORA_DIO0, GPIO_DIRECTION_IN);
-
-	gpio_set_pin_pull_mode(LORA_DIO0,
-	                       // <y> Pull configuration
-	                       // <id> pad_pull_config
-	                       // <GPIO_PULL_OFF"> Off
-	                       // <GPIO_PULL_UP"> Pull-up
-	                       // <GPIO_PULL_DOWN"> Pull-down
-	                       GPIO_PULL_OFF);
-
-	gpio_set_pin_function(LORA_DIO0, GPIO_PIN_FUNCTION_OFF);
-
-	// GPIO on PA11
-
-	// Set pin direction to input
-	gpio_set_pin_direction(LORA_RESET, GPIO_DIRECTION_IN);
-
-	gpio_set_pin_pull_mode(LORA_RESET,
-	                       // <y> Pull configuration
-	                       // <id> pad_pull_config
-	                       // <GPIO_PULL_OFF"> Off
-	                       // <GPIO_PULL_UP"> Pull-up
-	                       // <GPIO_PULL_DOWN"> Pull-down
-	                       GPIO_PULL_OFF);
-
-	gpio_set_pin_function(LORA_RESET, GPIO_PIN_FUNCTION_OFF);
-
 	// GPIO on PA13
 
 	// Set pin direction to input
@@ -669,9 +513,9 @@ void system_init(void)
 	// GPIO on PB00
 
 	// Set pin direction to input
-	gpio_set_pin_direction(W1_SLEEP, GPIO_DIRECTION_IN);
+	gpio_set_pin_direction(PB00, GPIO_DIRECTION_IN);
 
-	gpio_set_pin_pull_mode(W1_SLEEP,
+	gpio_set_pin_pull_mode(PB00,
 	                       // <y> Pull configuration
 	                       // <id> pad_pull_config
 	                       // <GPIO_PULL_OFF"> Off
@@ -679,26 +523,11 @@ void system_init(void)
 	                       // <GPIO_PULL_DOWN"> Pull-down
 	                       GPIO_PULL_OFF);
 
-	gpio_set_pin_function(W1_SLEEP, GPIO_PIN_FUNCTION_OFF);
+	gpio_set_pin_function(PB00, GPIO_PIN_FUNCTION_OFF);
 
-	// GPIO on PB10
+	// GPIO on PB03
 
-	// Set pin direction to input
-	gpio_set_pin_direction(AUX_ENABLE, GPIO_DIRECTION_IN);
-
-	gpio_set_pin_pull_mode(AUX_ENABLE,
-	                       // <y> Pull configuration
-	                       // <id> pad_pull_config
-	                       // <GPIO_PULL_OFF"> Off
-	                       // <GPIO_PULL_UP"> Pull-up
-	                       // <GPIO_PULL_DOWN"> Pull-down
-	                       GPIO_PULL_OFF);
-
-	gpio_set_pin_function(AUX_ENABLE, GPIO_PIN_FUNCTION_OFF);
-
-	// GPIO on PB13
-
-	gpio_set_pin_level(LORA_SPI_CS,
+	gpio_set_pin_level(AUX_ENABLE,
 	                   // <y> Initial level
 	                   // <id> pad_initial_level
 	                   // <false"> Low
@@ -706,9 +535,9 @@ void system_init(void)
 	                   true);
 
 	// Set pin direction to output
-	gpio_set_pin_direction(LORA_SPI_CS, GPIO_DIRECTION_OUT);
+	gpio_set_pin_direction(AUX_ENABLE, GPIO_DIRECTION_OUT);
 
-	gpio_set_pin_function(LORA_SPI_CS, GPIO_PIN_FUNCTION_OFF);
+	gpio_set_pin_function(AUX_ENABLE, GPIO_PIN_FUNCTION_OFF);
 
 	// GPIO on PB16
 
@@ -726,7 +555,6 @@ void system_init(void)
 	gpio_set_pin_function(NALERT, GPIO_PIN_FUNCTION_OFF);
 
 	ANALOGIN_init();
-	EXTERNAL_IRQ_0_init();
 
 	FLASH_init();
 
@@ -737,15 +565,12 @@ void system_init(void)
 
 	SDCARD_init();
 
-	LORA_SPI_init();
-
 	I2C_HOST_init();
 
 	delay_driver_init();
 
 	CALENDAR_init();
 
-	LORA_TIMER_init();
 	SHARED_TIMER_init();
 
 	USB_0_init();

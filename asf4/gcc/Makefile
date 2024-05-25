@@ -50,7 +50,6 @@ usb/device \
 samd21a/gcc \
 hpl/sercom \
 hpl/nvmctrl \
-hpl/eic \
 hpl/core
 
 # List the object files
@@ -61,7 +60,6 @@ hal/src/hal_calendar.o \
 hpl/wdt/hpl_wdt.o \
 samd21a/gcc/gcc/startup_samd21.o \
 hal/src/hal_i2c_s_async.o \
-hpl/eic/hpl_eic.o \
 usb/class/cdc/device/cdcdf_acm.o \
 hal/utils/src/utils_syscalls.o \
 samd21a/gcc/system_samd21.o \
@@ -74,12 +72,12 @@ hpl/sysctrl/hpl_sysctrl.o \
 hpl/core/hpl_init.o \
 hal/src/hal_wdt.o \
 hpl/core/hpl_core_m0plus_base.o \
+hal/src/hal_adc_dma.o \
 hal/utils/src/utils_assert.o \
 hpl/dmac/hpl_dmac.o \
 hpl/pm/hpl_pm.o \
 usb/usb_protocol.o \
 hal/src/hal_i2c_m_async.o \
-hpl/sercom/hpl_sercom.o \
 hpl/gclk/hpl_gclk.o \
 hal/src/hal_flash.o \
 hal/src/hal_init.o \
@@ -90,8 +88,7 @@ hpl/rtc/hpl_rtc.o \
 examples/driver_examples.o \
 driver_init.o \
 hal/src/hal_usart_async.o \
-hal/src/hal_adc_sync.o \
-hal/src/hal_ext_irq.o \
+hpl/sercom/hpl_sercom.o \
 hal/utils/src/utils_ringbuffer.o \
 hal/src/hal_gpio.o \
 hal/utils/src/utils_event.o \
@@ -110,7 +107,6 @@ OBJS_AS_ARGS +=  \
 "hpl/wdt/hpl_wdt.o" \
 "samd21a/gcc/gcc/startup_samd21.o" \
 "hal/src/hal_i2c_s_async.o" \
-"hpl/eic/hpl_eic.o" \
 "usb/class/cdc/device/cdcdf_acm.o" \
 "hal/utils/src/utils_syscalls.o" \
 "samd21a/gcc/system_samd21.o" \
@@ -123,12 +119,12 @@ OBJS_AS_ARGS +=  \
 "hpl/core/hpl_init.o" \
 "hal/src/hal_wdt.o" \
 "hpl/core/hpl_core_m0plus_base.o" \
+"hal/src/hal_adc_dma.o" \
 "hal/utils/src/utils_assert.o" \
 "hpl/dmac/hpl_dmac.o" \
 "hpl/pm/hpl_pm.o" \
 "usb/usb_protocol.o" \
 "hal/src/hal_i2c_m_async.o" \
-"hpl/sercom/hpl_sercom.o" \
 "hpl/gclk/hpl_gclk.o" \
 "hal/src/hal_flash.o" \
 "hal/src/hal_init.o" \
@@ -139,8 +135,7 @@ OBJS_AS_ARGS +=  \
 "examples/driver_examples.o" \
 "driver_init.o" \
 "hal/src/hal_usart_async.o" \
-"hal/src/hal_adc_sync.o" \
-"hal/src/hal_ext_irq.o" \
+"hpl/sercom/hpl_sercom.o" \
 "hal/utils/src/utils_ringbuffer.o" \
 "hal/src/hal_gpio.o" \
 "hal/utils/src/utils_event.o" \
@@ -162,7 +157,6 @@ DIR_INCLUDES +=  \
 -I"../hpl/adc" \
 -I"../hpl/core" \
 -I"../hpl/dmac" \
--I"../hpl/eic" \
 -I"../hpl/gclk" \
 -I"../hpl/nvmctrl" \
 -I"../hpl/pm" \
@@ -196,7 +190,6 @@ DEPS_AS_ARGS +=  \
 "hal/utils/src/utils_event.d" \
 "hal/src/hal_io.d" \
 "hpl/systick/hpl_systick.d" \
-"hpl/eic/hpl_eic.d" \
 "hal/src/hal_i2c_s_async.d" \
 "hal/utils/src/utils_syscalls.d" \
 "usb/class/cdc/device/cdcdf_acm.d" \
@@ -204,6 +197,7 @@ DEPS_AS_ARGS +=  \
 "hpl/nvmctrl/hpl_nvmctrl.d" \
 "hal/src/hal_timer.d" \
 "hal/src/hal_spi_m_sync.d" \
+"hal/src/hal_adc_dma.d" \
 "hpl/core/hpl_core_m0plus_base.d" \
 "hal/src/hal_wdt.d" \
 "hpl/dmac/hpl_dmac.d" \
@@ -217,9 +211,7 @@ DEPS_AS_ARGS +=  \
 "usb_start.d" \
 "hal/src/hal_init.d" \
 "driver_init.d" \
-"hal/src/hal_adc_sync.d" \
 "hal/src/hal_usart_async.d" \
-"hal/src/hal_i2c_m_async.d" \
 "samd21a/gcc/system_samd21.d" \
 "main.d" \
 "examples/driver_examples.d" \
@@ -229,13 +221,13 @@ DEPS_AS_ARGS +=  \
 "hal/utils/src/utils_ringbuffer.d" \
 "hpl/sercom/hpl_sercom.d" \
 "hal/src/hal_gpio.d" \
-"atmel_start.d" \
+"hal/src/hal_i2c_m_async.d" \
 "hal/src/hal_atomic.d" \
 "hpl/tc/hpl_tc.d" \
 "usb/device/usbdc.d" \
 "hpl/pm/hpl_pm.d" \
 "hpl/adc/hpl_adc.d" \
-"hal/src/hal_ext_irq.d"
+"atmel_start.d"
 
 OUTPUT_FILE_NAME :=AtmelStart
 QUOTE := "

@@ -14,8 +14,6 @@ extern "C" {
 
 void ANALOGIN_example(void);
 
-void EXTERNAL_IRQ_0_example(void);
-
 void FLASH_example(void);
 
 void I2C_DEVICE_example(void);
@@ -27,8 +25,6 @@ void I2C_HOST_example(void);
 void delay_example(void);
 
 void CALENDAR_example(void);
-
-void LORA_TIMER_example(void);
 
 void SHARED_TIMER_example(void);
 

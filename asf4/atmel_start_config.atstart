@@ -90,11 +90,11 @@ middlewares:
 drivers:
   ANALOGIN:
     user_label: ANALOGIN
-    definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::ADC::driver_config_definition::ADC::HAL:Driver:ADC.Sync
+    definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::ADC::driver_config_definition::ADC::HAL:Driver:ADC.DMA
     functionality: ADC
-    api: HAL:Driver:ADC_Sync
+    api: HAL:Driver:ADC_DMA
     configuration:
-      adc_advanced_settings: false
+      adc_advanced_settings: true
       adc_arch_adjres: 0
       adc_arch_corren: false
       adc_arch_dbgrun: false
@@ -108,8 +108,8 @@ drivers:
       adc_arch_refcomp: false
       adc_arch_resrdyeo: false
       adc_arch_runstdby: false
-      adc_arch_samplen: 0
-      adc_arch_samplenum: 1 sample
+      adc_arch_samplen: 1
+      adc_arch_samplenum: 256 samples
       adc_arch_startei: false
       adc_arch_syncei: false
       adc_arch_winlt: 0
@@ -120,9 +120,9 @@ drivers:
       adc_freerunning_mode: false
       adc_pinmux_negative: ADC AIN0 pin
       adc_pinmux_positive: ADC AIN0 pin
-      adc_prescaler: Peripheral clock divided by 4
+      adc_prescaler: Peripheral clock divided by 512
       adc_reference: 1.0V voltage reference
-      adc_resolution: 12-bit
+      adc_resolution: 8-bit
     optional_signals:
     - identifier: ANALOGIN:AIN/1
       pad: PA03
@@ -157,117 +157,11 @@ drivers:
       domain_group:
         nodes:
         - name: ADC
-          input: Generic clock generator 0
+          input: Generic clock generator 3
           external: false
           external_frequency: 0
         configuration:
-          adc_gclk_selection: Generic clock generator 0
-  EXTERNAL_IRQ_0:
-    user_label: EXTERNAL_IRQ_0
-    definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::EIC::driver_config_definition::Default::HAL:Driver:Ext.IRQ
-    functionality: External_IRQ
-    api: HAL:Driver:Ext_IRQ
-    configuration:
-      eic_arch_enable_irq_setting0: false
-      eic_arch_enable_irq_setting1: false
-      eic_arch_enable_irq_setting10: false
-      eic_arch_enable_irq_setting11: false
-      eic_arch_enable_irq_setting12: false
-      eic_arch_enable_irq_setting13: false
-      eic_arch_enable_irq_setting14: false
-      eic_arch_enable_irq_setting15: false
-      eic_arch_enable_irq_setting2: false
-      eic_arch_enable_irq_setting3: false
-      eic_arch_enable_irq_setting4: false
-      eic_arch_enable_irq_setting5: false
-      eic_arch_enable_irq_setting6: false
-      eic_arch_enable_irq_setting7: true
-      eic_arch_enable_irq_setting8: false
-      eic_arch_enable_irq_setting9: false
-      eic_arch_extinteo0: false
-      eic_arch_extinteo1: false
-      eic_arch_extinteo10: false
-      eic_arch_extinteo11: false
-      eic_arch_extinteo12: false
-      eic_arch_extinteo13: false
-      eic_arch_extinteo14: false
-      eic_arch_extinteo15: false
-      eic_arch_extinteo2: false
-      eic_arch_extinteo3: false
-      eic_arch_extinteo4: false
-      eic_arch_extinteo5: false
-      eic_arch_extinteo6: false
-      eic_arch_extinteo7: false
-      eic_arch_extinteo8: false
-      eic_arch_extinteo9: false
-      eic_arch_filten0: false
-      eic_arch_filten1: false
-      eic_arch_filten10: false
-      eic_arch_filten11: false
-      eic_arch_filten12: false
-      eic_arch_filten13: false
-      eic_arch_filten14: false
-      eic_arch_filten15: false
-      eic_arch_filten2: false
-      eic_arch_filten3: false
-      eic_arch_filten4: false
-      eic_arch_filten5: false
-      eic_arch_filten6: false
-      eic_arch_filten7: false
-      eic_arch_filten8: false
-      eic_arch_filten9: false
-      eic_arch_nmifilten: false
-      eic_arch_nmisense: No detection
-      eic_arch_sense0: No detection
-      eic_arch_sense1: No detection
-      eic_arch_sense10: No detection
-      eic_arch_sense11: No detection
-      eic_arch_sense12: No detection
-      eic_arch_sense13: No detection
-      eic_arch_sense14: No detection
-      eic_arch_sense15: No detection
-      eic_arch_sense2: No detection
-      eic_arch_sense3: No detection
-      eic_arch_sense4: No detection
-      eic_arch_sense5: No detection
-      eic_arch_sense6: No detection
-      eic_arch_sense7: Rising-edge detection
-      eic_arch_sense8: No detection
-      eic_arch_sense9: No detection
-      eic_arch_wakeupen0: false
-      eic_arch_wakeupen1: false
-      eic_arch_wakeupen10: false
-      eic_arch_wakeupen11: false
-      eic_arch_wakeupen12: false
-      eic_arch_wakeupen13: false
-      eic_arch_wakeupen14: false
-      eic_arch_wakeupen15: false
-      eic_arch_wakeupen2: false
-      eic_arch_wakeupen3: false
-      eic_arch_wakeupen4: false
-      eic_arch_wakeupen5: false
-      eic_arch_wakeupen6: false
-      eic_arch_wakeupen7: true
-      eic_arch_wakeupen8: false
-      eic_arch_wakeupen9: false
-    optional_signals:
-    - identifier: EXTERNAL_IRQ_0:EXTINT/7
-      pad: PA07
-      mode: Enabled
-      configuration: null
-      definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::optional_signal_definition::EIC.EXTINT.7
-      name: EIC/EXTINT/7
-      label: EXTINT/7
-    variant: null
-    clocks:
-      domain_group:
-        nodes:
-        - name: EIC
-          input: Generic clock generator 0
-          external: false
-          external_frequency: 0
-        configuration:
-          eic_gclk_selection: Generic clock generator 0
+          adc_gclk_selection: Generic clock generator 3
   GCLK:
     user_label: GCLK
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::GCLK::driver_config_definition::GCLK::HAL:HPL:GCLK
@@ -589,50 +483,6 @@ drivers:
         configuration:
           core_gclk_selection: Generic clock generator 0
           slow_gclk_selection: Generic clock generator 3
-  LORA_SPI:
-    user_label: LORA_SPI
-    definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::SERCOM4::driver_config_definition::SPI.Master::HAL:Driver:SPI.Master.Sync
-    functionality: SPI
-    api: HAL:Driver:SPI_Master_Sync
-    configuration:
-      spi_master_advanced: false
-      spi_master_arch_cpha: Sample input on leading edge
-      spi_master_arch_cpol: SCK is low when idle
-      spi_master_arch_dbgstop: Keep running
-      spi_master_arch_dord: MSB first
-      spi_master_arch_ibon: In data stream
-      spi_master_arch_runstdby: false
-      spi_master_baud_rate: 1000000
-      spi_master_character_size: 8 bits
-      spi_master_dummybyte: 511
-      spi_master_rx_enable: true
-    optional_signals: []
-    variant:
-      specification: TXPO=1, RXPO=0
-      required_signals:
-      - name: SERCOM4/PAD/0
-        pad: PB12
-        label: MISO
-      - name: SERCOM4/PAD/2
-        pad: PB14
-        label: MOSI
-      - name: SERCOM4/PAD/3
-        pad: PB15
-        label: SCK
-    clocks:
-      domain_group:
-        nodes:
-        - name: Core
-          input: Generic clock generator 0
-          external: false
-          external_frequency: 0
-        - name: Slow
-          input: Generic clock generator 3
-          external: false
-          external_frequency: 0
-        configuration:
-          core_gclk_selection: Generic clock generator 0
-          slow_gclk_selection: Generic clock generator 3
   I2C_HOST:
     user_label: I2C_HOST
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::SERCOM5::driver_config_definition::I2C.Master.Standard~2FFast-mode::HAL:Driver:I2C.Master.Async
@@ -714,36 +564,6 @@ drivers:
           external_frequency: 0
         configuration:
           rtc_clk_selection: Generic clock generator 1
-  LORA_TIMER:
-    user_label: LORA_TIMER
-    definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::TC3::driver_config_definition::Timer::HAL:Driver:Timer
-    functionality: Timer
-    api: HAL:Driver:Timer
-    configuration:
-      tc_arch_dbgrun: false
-      tc_arch_evact: Event action disabled
-      tc_arch_mceo0: false
-      tc_arch_mceo1: false
-      tc_arch_ovfeo: false
-      tc_arch_presync: Reload or reset counter on next GCLK
-      tc_arch_runstdby: false
-      tc_arch_tcei: false
-      tc_arch_tceinv: false
-      timer_advanced_configuration: false
-      timer_event_control: false
-      timer_prescaler: Divide by 8
-      timer_tick: 10000
-    optional_signals: []
-    variant: null
-    clocks:
-      domain_group:
-        nodes:
-        - name: TC
-          input: Generic clock generator 3
-          external: false
-          external_frequency: 0
-        configuration:
-          tc_gclk_selection: Generic clock generator 3
   SHARED_TIMER:
     user_label: SHARED_TIMER
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::TC4::driver_config_definition::Timer::HAL:Driver:Timer
@@ -1228,24 +1048,6 @@ pads:
     mode: Analog
     user_label: BAT_MON
     configuration: null
-  LORA_DIO2:
-    name: PA05
-    definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PA05
-    mode: Digital input
-    user_label: LORA_DIO2
-    configuration: null
-  LORA_DIO1:
-    name: PA06
-    definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PA06
-    mode: Digital input
-    user_label: LORA_DIO1
-    configuration: null
-  W1_GPIO:
-    name: PA07
-    definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PA07
-    mode: Digital input
-    user_label: W1_GPIO
-    configuration: null
   I2C_DEVICE_SDA:
     name: PA08
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PA08
@@ -1257,49 +1059,6 @@ pads:
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PA09
     mode: I2C
     user_label: I2C_CLIENT_SCL
-    configuration: null
-  LORA_DIO0:
-    name: PA10
-    definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PA10
-    mode: Digital input
-    user_label: LORA_DIO0
-    configuration: null
-  LORA_RESET:
-    name: PA11
-    definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PA11
-    mode: Digital input
-    user_label: LORA_RESET
-    configuration: null
-  AUX_ENABLE:
-    name: PB10
-    definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PB10
-    mode: Digital input
-    user_label: AUX_ENABLE
-    configuration: null
-  LORA_SPI_MISO:
-    name: PB12
-    definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PB12
-    mode: Digital input
-    user_label: LORA_SPI_MISO
-    configuration: null
-  LORA_SPI_CS:
-    name: PB13
-    definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PB13
-    mode: Digital output
-    user_label: LORA_SPI_CS
-    configuration:
-      pad_initial_level: High
-  LORA_SPI_MOSI:
-    name: PB14
-    definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PB14
-    mode: Digital output
-    user_label: LORA_SPI_MOSI
-    configuration: null
-  LORA_SPI_SCLK:
-    name: PB15
-    definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PB15
-    mode: Digital output
-    user_label: LORA_SPI_SCLK
     configuration: null
   SPIFLASH_MISO:
     name: PA12
@@ -1403,11 +1162,18 @@ pads:
     mode: I2C
     user_label: I2C_HOST_SCL
     configuration: null
-  W1_SLEEP:
+  PB00:
     name: PB00
     definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PB00
     mode: Digital input
-    user_label: W1_SLEEP
+    user_label: PB00
     configuration: null
+  AUX_ENABLE:
+    name: PB03
+    definition: Atmel:SAMD21_Drivers:0.0.1::SAMD21J18A-AF::pad::PB03
+    mode: Digital output
+    user_label: AUX_ENABLE
+    configuration:
+      pad_initial_level: High
 toolchain_options: []
 static_files: []

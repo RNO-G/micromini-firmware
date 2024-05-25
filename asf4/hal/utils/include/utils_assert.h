@@ -39,7 +39,6 @@ extern "C" {
 #endif
 
 #include <compiler.h>
-#undef assert
 
 #ifndef USE_SIMPLE_ASSERT
 //# define USE_SIMPLE_ASSERT

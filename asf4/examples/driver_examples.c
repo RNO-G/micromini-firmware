@@ -10,31 +10,23 @@
 #include "driver_init.h"
 #include "utils.h"
 
+/*! The buffer size for ADC */
+#define ANALOGIN_BUFFER_SIZE 16
+static uint8_t ANALOGIN_buffer[ANALOGIN_BUFFER_SIZE];
+
+static void convert_cb_ANALOGIN(const struct adc_dma_descriptor *const descr)
+{
+}
+
 /**
  * Example of using ANALOGIN to generate waveform.
  */
 void ANALOGIN_example(void)
 {
-	uint8_t buffer[2];
-
-	adc_sync_enable_channel(&ANALOGIN, 0);
-
-	while (1) {
-		adc_sync_read_channel(&ANALOGIN, 0, buffer, 2);
-	}
-}
-
-static void button_on_PA07_pressed(void)
-{
-}
-
-/**
- * Example of using EXTERNAL_IRQ_0
- */
-void EXTERNAL_IRQ_0_example(void)
-{
-
-	ext_irq_register(PIN_PA07, button_on_PA07_pressed);
+	/* Enable ADC freerun mode in order to make example work */
+	adc_dma_register_callback(&ANALOGIN, ADC_DMA_COMPLETE_CB, convert_cb_ANALOGIN);
+	adc_dma_enable_channel(&ANALOGIN, 0);
+	adc_dma_read(&ANALOGIN, ANALOGIN_buffer, ANALOGIN_BUFFER_SIZE);
 }
 
 static uint8_t src_data[128];
@@ -134,20 +126,6 @@ void SDCARD_example(void)
 	io_write(io, example_SDCARD, 12);
 }
 
-/**
- * Example of using LORA_SPI to write "Hello World" using the IO abstraction.
- */
-static uint8_t example_LORA_SPI[12] = "Hello World!";
-
-void LORA_SPI_example(void)
-{
-	struct io_descriptor *io;
-	spi_m_sync_get_io_descriptor(&LORA_SPI, &io);
-
-	spi_m_sync_enable(&LORA_SPI);
-	io_write(io, example_LORA_SPI, 12);
-}
-
 static uint8_t I2C_HOST_example_str[12] = "Hello World!";
 
 void I2C_HOST_tx_complete(struct i2c_m_async_desc *const i2c)
@@ -204,33 +182,6 @@ void CALENDAR_example(void)
 	alarm.cal_alarm.mode              = REPEAT;
 
 	calendar_set_alarm(&CALENDAR, &alarm, alarm_cb);
-}
-
-static struct timer_task LORA_TIMER_task1, LORA_TIMER_task2;
-
-/**
- * Example of using LORA_TIMER.
- */
-static void LORA_TIMER_task1_cb(const struct timer_task *const timer_task)
-{
-}
-
-static void LORA_TIMER_task2_cb(const struct timer_task *const timer_task)
-{
-}
-
-void LORA_TIMER_example(void)
-{
-	LORA_TIMER_task1.interval = 100;
-	LORA_TIMER_task1.cb       = LORA_TIMER_task1_cb;
-	LORA_TIMER_task1.mode     = TIMER_TASK_REPEAT;
-	LORA_TIMER_task2.interval = 200;
-	LORA_TIMER_task2.cb       = LORA_TIMER_task2_cb;
-	LORA_TIMER_task2.mode     = TIMER_TASK_REPEAT;
-
-	timer_add_task(&LORA_TIMER, &LORA_TIMER_task1);
-	timer_add_task(&LORA_TIMER, &LORA_TIMER_task2);
-	timer_start(&LORA_TIMER);
 }
 
 static struct timer_task SHARED_TIMER_task1, SHARED_TIMER_task2;
