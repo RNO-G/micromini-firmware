@@ -20,7 +20,7 @@ extern struct micromini_measurement
 #define DEFAULT_AIN_SOURCE SOURCE_AIN1
 #define AIN_SIZE 2048
 
-extern volatile uint8_t ain[AIN_SIZE+1]; //extra due to first bad byte
+extern volatile uint8_t ain[AIN_SIZE]; //extra due to first bad byte
 extern volatile int ain_ready;
 extern volatile uint8_t ain_nread_div_8_m1; //nread/8 - 1
 

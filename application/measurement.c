@@ -10,11 +10,12 @@ volatile int measurement_queued = 0;
 static int measurement_in_progress = 0;
 static int measurement_done = 0;
 static int last_scheduled;
+static int adc_in_progress = 0;
 volatile uint8_t nmeasurements = 0;
 
-volatile uint8_t ain[AIN_SIZE+1];
+volatile uint8_t ain[AIN_SIZE];
 volatile int ain_ready;
-volatile uint8_t ain_nread_div_8_m1 = 63;
+volatile uint8_t ain_nread_div_8_m1 = 31;
 volatile uint16_t ain_hist[256];
 volatile uint8_t ain_hist_mode_bin;
 volatile uint8_t ain_hist_max;
@@ -23,7 +24,7 @@ volatile uint8_t ain_hist_min;
 
 volatile enum ain_source ain_source = DEFAULT_AIN_SOURCE;
 static volatile enum ain_source last_source = DEFAULT_AIN_SOURCE;
-static const uint8_t source_map[] = { [SOURCE_AIN1] = AIN1, [SOURCE_AIN12] = AIN12, [SOURCE_AIN13] = AIN13, [SOURCE_BATMON] = BAT_MON , [SOURCE_TEMP] = 0x18};
+static const uint8_t source_map[] = { [SOURCE_AIN1] = 0x1, [SOURCE_AIN12] = 12 , [SOURCE_AIN13] = 13, [SOURCE_BATMON] = BAT_MON , [SOURCE_TEMP] = 0x18};
 
 volatile uint8_t thresh_rising = 128;
 volatile uint8_t thresh_falling = 128;
@@ -35,17 +36,22 @@ volatile uint8_t ain_rate_cfg = 0;
 static uint8_t last_gain_cfg = 0;
 static uint8_t last_rate_cfg = 0;
 
+static volatile int nain_cb = 0;
+static volatile int is_conversion_complete = 0;
 static void ain_cb(const struct adc_dma_descriptor * const d)
 {
   (void) d;
+  nain_cb++;
+
   adc_dma_disable_channel(&ANALOGIN,0);
+  is_conversion_complete = 1;
   //compute hist
 
   ain_hist_max = 0;
   ain_hist_min = 0xff;
   uint16_t biggest = 0;
-  //fill histogram, skip first sample
-  for (int i = 1; i <= 8*(1+ain_nread_div_8_m1); i++)
+  //fill histogram
+  for (int i = 0; i < 8*(1+ain_nread_div_8_m1); i++)
   {
     uint8_t val = ain[i];
     ain_hist[val]++;
@@ -59,6 +65,7 @@ static void ain_cb(const struct adc_dma_descriptor * const d)
 
   }
   recalculate_crossings();
+  adc_in_progress = 0;
   ain_ready = 1;
 }
 
@@ -67,10 +74,10 @@ void recalculate_crossings()
   ain_ready =0;
   N_rising =0;
   N_falling = 0;
-  for (int i = 1; i <= 8*(1+ain_nread_div_8_m1); i++)
+  for (int i = 0; i < 8*(1+ain_nread_div_8_m1); i++)
   {
-    if (i > 1 && ain[i] >= thresh_rising && ain[i-1] < thresh_rising) N_rising++;
-    if (i > 1 && ain[i] <= thresh_falling && ain[i-1] > thresh_falling) N_falling++;
+    if (i > 0 && ain[i] >= thresh_rising && ain[i-1] < thresh_rising) N_rising++;
+    if (i > 0 && ain[i] <= thresh_falling && ain[i-1] > thresh_falling) N_falling++;
   }
   ain_ready =1;
 }
@@ -134,11 +141,14 @@ static struct ltc2992_ctx ltc = { .addr = LTC2992_ADDR };
 
 void measurement_init()
 {
-	adc_dma_init(&ANALOGIN, ADC);
   adc_dma_set_inputs(&ANALOGIN, source_map[DEFAULT_AIN_SOURCE], 0x19,0);
   adc_dma_set_conversion_mode(&ANALOGIN, ADC_CONVERSION_MODE_FREERUN);
   adc_dma_register_callback(&ANALOGIN, ADC_DMA_COMPLETE_CB, ain_cb);
 
+  for (size_t i = 0; i <  sizeof(ain); i++)
+  {
+    ain[i] = i/8 & 0xff;
+  }
   //set temperature range, shutdown mode
   i2c_task_t tmp432_task = {.addr = TMP432_ADDRESS, .reg=TMP432_REG_CFG1, .write=1, .data = TMP432_EXTENDED_TEMPERATURE_MASK | TMP432_SD_MASK }; 
   i2c_enqueue(&tmp432_task);
@@ -148,7 +158,7 @@ void measurement_init()
 
 static inline uint16_t read12bitADC(uint16_t msb, uint16_t lsb)
 {
-  return (( msb << 8) | lsb) >> 4; 
+  return (( msb << 8) | lsb) >> 4;
 
 }
 
@@ -217,6 +227,10 @@ void update_temps_if_ready()
 
 int measurement_process()
 {
+  if (adc_in_progress)
+  {
+    is_conversion_complete = adc_dma_is_conversion_complete(&ANALOGIN);
+  }
 
   //handle potential ADC changes here
   if (!measurement_queued && !measurement_in_progress)
@@ -260,11 +274,15 @@ int measurement_process()
     i2c_enqueue(&tmp432_task);
 
     next_measurement.when = last_scheduled;
-    ain_ready = 0;
-    adc_dma_enable_channel(&ANALOGIN, 0);
-    adc_dma_read(&ANALOGIN, ain, 8*ain_nread_div_8_m1+2); //first is ignored
-    adc_dma_start_conversion(&ANALOGIN);
-    memset(ain_hist,0,sizeof(ain_hist));
+    if (!adc_in_progress)
+    {
+      is_conversion_complete = 0;
+      for (int i = 0; i < 256; i++) ain_hist[i]=0;
+      adc_in_progress = 1;
+      ain_ready = 0;
+      adc_dma_enable_channel(&ANALOGIN, 0);
+      adc_dma_read(&ANALOGIN, ain, 8*(ain_nread_div_8_m1+1));
+    }
 
 
     while(!tmp432_task.done);
