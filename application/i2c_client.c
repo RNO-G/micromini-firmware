@@ -6,7 +6,7 @@
 #include "application/measurement.h"
 
 
-#define ENABLE_TRACE
+//#define ENABLE_TRACE
 
 #ifdef ENABLE_TRACE
 
@@ -44,7 +44,7 @@ static uint32_t ntx_done_callback;
 static uint32_t ntx_callback;
 static uint8_t ain_offs;
 static uint8_t hist_bin;
-static uint8_t ain_nread;
+static uint8_t ain_nread = 0;
 static uint8_t last_reg = 0xff;
 
 static enum
@@ -94,8 +94,8 @@ static volatile uint8_t * handle_readbacks(int * N)
   switch (rx_mode)
   {
     case AIN_READING:
-      *N = ain_nread;
-      return &ain[1 + ain_offs];
+      *N = ain_nread+1;
+      return &ain[ain_offs];
     case AWAITING_AIN_OFFSET:
       rx_mode = READY;
       return &ain_offs;
@@ -144,7 +144,7 @@ static void tx_callback(const struct i2c_s_async_descriptor * const desc)
     int N = 1;
     uint8_t * tx = handle_readbacks(&N);
     TX_TRACE(*tx);
-    if (1!=io_write(io,tx,1)) nwr_fail++;
+    if (1!=io_write(io,tx,N)) nwr_fail++;
     nreadbacks++;
   }
   while (tx_queued != tx_sent)
