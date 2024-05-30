@@ -256,7 +256,7 @@
 // <i> Indicates whether the destination address incrementation is enabled or not
 // <id> dmac_dstinc_0
 #ifndef CONF_DMAC_DSTINC_0
-#define CONF_DMAC_DSTINC_0 0
+#define CONF_DMAC_DSTINC_0 1
 #endif
 
 // <o> Beat Size
@@ -311,7 +311,7 @@
 // <i> Defines the trigger action used for a transfer
 // <id> dmac_trigact_1
 #ifndef CONF_DMAC_TRIGACT_1
-#define CONF_DMAC_TRIGACT_1 0
+#define CONF_DMAC_TRIGACT_1 2
 #endif
 
 // <o> Trigger source
