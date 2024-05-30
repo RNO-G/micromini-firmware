@@ -21,13 +21,26 @@ REG, TYPE,NAME, DESCRIPTION
 0x53, R, T1_LSB, LSB of T1 sensor
 0x54, R, T2_MSB, MSB of T2 sensor
 0x55, R, T2_LSB, LSB of T2 sensor
-0x60, R, BAT_MON_LSB, LSB of battery monitor ADC
-0x61, R, BAT_MON_MSB, MSB of battery monitor ADC
-0x62, R, AIN1_MON_LSB, LSB of AIN1 ADC
-0x63, R, AIN1_MON_MSB, MSB of AIN1 ADC
-0x64, R, AIN12_MON_LSB, LSB of AIN12 ADC
-0x65, R, AIN12_MON_MSB, MSB of AIN12 ADC
-0x66, R, AIN13_MON_LSB, LSB of AIN13 ADC
-0x67, R, AIN13_MON_MSB, MSB of AIN13 ADC
-0x90, RW, WRITE_GPIOS, "Write GPIOS  (bit0 = AUX_EN). First send mask, then send values. Set mask to 0 to not change (then values are don't care or optional). Will read back previous value."
-0xa0, R, READ_GPIOS,READ GPIOS  (bit0 = ALERT)
+0x60, R, AIN,"Read adc value at AIN_OFFSET."
+0x61, R, AIN_READY,"Is AIN ready? 0 no, 1 yes"
+0x62, RW, AIN_OFFSET,"set byte OFFSET to read"
+0x63, RW, AIN_NREAD,"number of samples to send on AIN"
+0x64, RW, AIN_SOURCE,"source of AIN (0-3), 0 = AIN1, 1 = AIN12, 2 = AIN13, 3= BAT_MON"
+0x65, RW, AIN_RATE, "ain rate configuration; bits 0-2: clock prescaler, bits 3-7 SAMPLEN"
+0x66, RW, AIN_GAIN, "ain gain configuration; gain 0-3: refsel, bits 4-7: ref "
+0x67, RW, AIN_NMEAS,"number of samples to measure on conversion, divided by 8 minus 1 (i.e. 0 = 8, 31=256, 63 = 512, 255 = 2048)"
+0x70, R, AIN_HIST,"Read ADC histogram value at AIN_HIST_BIN (saturates at 255, use LSB/MSB to get more"
+0x71, R, AIN_HIST_MSB,"Read ADC histogram MSB value at AIN_HIST_BIN"
+0x72, R, AIN_HIST_LSB,"Read ADC histogram LSB value at AIN_HIST_BIN"
+0x73, RW, AIN_HIST_BIN,"histogram bin to read"
+0x74, R, AIN_HIST_MODE_BIN,"mode bin of hist"
+0x75, R, AIN_HIST_HIGHEST_VAL,"maximum populated bin of hist"
+0x76, R, AIN_HIST_LOWEST_VAL,"maximum populated bin of hist"
+0x80, R, AIN_NUM_RISING_CROSSINGS,"number of rising threshold crossings, recalculated on threshold change"
+0x81, R, AIN_NUM_FALLING_CROSSINGS,"number of falling threshold crossings, recalculated on threshold change"
+0x82, RW, AIN_RISING_THRESH,"threshold for rising threshold crossings"
+0x83, RW, AIN_FALLING_THRESH,"threshold for falling threshold crossings"
+0x90, RW, WRITE_GPIOS,"Write GPIOS  (bit0 = AUX_EN). First send mask, then send values. Or ask for a read for a readback."
+0xa0, R, READ_GPIOS,read gpios  (bit0 = ALERT)
+0xf3, R, RESET_REASON, reset reason for the MCU
+0xf4, W, RESET, reset the MCU

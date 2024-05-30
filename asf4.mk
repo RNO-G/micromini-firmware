@@ -90,6 +90,7 @@ hal/src/hal_i2c_m_sync.o \
 hal/src/hal_i2c_s_async.o \
 hal/src/hal_flash.o \
 hal/src/hal_adc_sync.o \
+hal/src/hal_adc_dma.o \
 hpl/adc/hpl_adc.o \
 hal/src/hal_delay.o \
 hpl/eic/hpl_eic.o \

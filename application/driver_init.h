@@ -17,6 +17,7 @@
 #include <hal_init.h>
 #include <hal_io.h>
 #include <hal_sleep.h>
+#include <hal_adc_dma.h>
 
 #include <hal_adc_sync.h>
 #include <hal_ext_irq.h>
@@ -46,7 +47,7 @@
 
 #define SERCOM0_I2CS_BUFFER_SIZE 16
 
-extern struct adc_sync_descriptor ANALOGIN;
+extern struct adc_dma_descriptor ANALOGIN;
 
 extern struct flash_descriptor FLASH;
 
@@ -54,18 +55,14 @@ extern struct i2c_s_async_descriptor I2C_DEVICE;
 extern struct usart_async_descriptor EXT_USART;
 extern struct spi_m_sync_descriptor  SPIFLASH;
 extern struct spi_m_sync_descriptor  SDCARD;
-extern struct spi_m_sync_descriptor  LORA_SPI;
 
 extern struct i2c_m_async_desc I2C_HOST;
 
 extern struct calendar_descriptor CALENDAR;
-extern struct timer_descriptor    LORA_TIMER;
 extern struct timer_descriptor    SHARED_TIMER;
 
 extern struct wdt_descriptor INTERNAL_WATCHDOG;
 
-void ANALOGIN_PORT_init(void);
-void ANALOGIN_CLOCK_init(void);
 void ANALOGIN_init(void);
 
 void FLASH_init(void);
@@ -86,10 +83,6 @@ void SPIFLASH_init(void);
 void SDCARD_PORT_init(void);
 void SDCARD_CLOCK_init(void);
 void SDCARD_init(void);
-
-void LORA_SPI_PORT_init(void);
-void LORA_SPI_CLOCK_init(void);
-void LORA_SPI_init(void);
 
 void I2C_HOST_CLOCK_init(void);
 void I2C_HOST_init(void);

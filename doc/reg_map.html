@@ -31,16 +31,29 @@
 <tr><td>0x53</td><td>R</td><td>T1_LSB</td><td>LSB of T1 sensor</td></tr>
 <tr><td>0x54</td><td>R</td><td>T2_MSB</td><td>MSB of T2 sensor</td></tr>
 <tr><td>0x55</td><td>R</td><td>T2_LSB</td><td>LSB of T2 sensor</td></tr>
-<tr><td>0x60</td><td>R</td><td>BAT_MON_LSB</td><td>LSB of battery monitor ADC</td></tr>
-<tr><td>0x61</td><td>R</td><td>BAT_MON_MSB</td><td>MSB of battery monitor ADC</td></tr>
-<tr><td>0x62</td><td>R</td><td>AIN1_MON_LSB</td><td>LSB of AIN1 ADC</td></tr>
-<tr><td>0x63</td><td>R</td><td>AIN1_MON_MSB</td><td>MSB of AIN1 ADC</td></tr>
-<tr><td>0x64</td><td>R</td><td>AIN12_MON_LSB</td><td>LSB of AIN12 ADC</td></tr>
-<tr><td>0x65</td><td>R</td><td>AIN12_MON_MSB</td><td>MSB of AIN12 ADC</td></tr>
-<tr><td>0x66</td><td>R</td><td>AIN13_MON_LSB</td><td>LSB of AIN13 ADC</td></tr>
-<tr><td>0x67</td><td>R</td><td>AIN13_MON_MSB</td><td>MSB of AIN13 ADC</td></tr>
-<tr><td>0x90</td><td>RW</td><td>WRITE_GPIOS</td><td>"Write GPIOS  (bit0 = AUX_EN). First send mask</td></tr>
-<tr><td>0xa0</td><td>R</td><td>READ_GPIOS</td><td>READ GPIOS  (bit0 = ALERT)</td></tr>
+<tr><td>0x60</td><td>R</td><td>AIN</td><td>Read adc value at AIN_OFFSET.</td></tr>
+<tr><td>0x61</td><td>R</td><td>AIN_READY</td><td>Is AIN ready? 0 no, 1 yes</td></tr>
+<tr><td>0x62</td><td>RW</td><td>AIN_OFFSET</td><td>set byte OFFSET to read</td></tr>
+<tr><td>0x63</td><td>RW</td><td>AIN_NREAD</td><td>number of samples to send on AIN</td></tr>
+<tr><td>0x64</td><td>RW</td><td>AIN_SOURCE</td><td>source of AIN (0-3), 0 = AIN1, 1 = AIN12, 2 = AIN13, 3= BAT_MON</td></tr>
+<tr><td>0x65</td><td>RW</td><td>AIN_RATE</td><td>"ain rate configuration; bits 0-2: clock prescaler</td></tr>
+<tr><td>0x66</td><td>RW</td><td>AIN_GAIN</td><td>"ain gain configuration; gain 0-3: refsel</td></tr>
+<tr><td>0x67</td><td>RW</td><td>AIN_NMEAS</td><td>number of samples to measure on conversion, divided by 8 minus 1 (i.e. 0 = 8, 31=256, 63 = 512, 255 = 2048)</td></tr>
+<tr><td>0x70</td><td>R</td><td>AIN_HIST</td><td>Read ADC histogram value at AIN_HIST_BIN (saturates at 255, use LSB/MSB to get more</td></tr>
+<tr><td>0x71</td><td>R</td><td>AIN_HIST_MSB</td><td>Read ADC histogram MSB value at AIN_HIST_BIN</td></tr>
+<tr><td>0x72</td><td>R</td><td>AIN_HIST_LSB</td><td>Read ADC histogram LSB value at AIN_HIST_BIN</td></tr>
+<tr><td>0x73</td><td>RW</td><td>AIN_HIST_BIN</td><td>histogram bin to read</td></tr>
+<tr><td>0x74</td><td>R</td><td>AIN_HIST_MODE_BIN</td><td>mode bin of hist</td></tr>
+<tr><td>0x75</td><td>R</td><td>AIN_HIST_HIGHEST_VAL</td><td>maximum populated bin of hist</td></tr>
+<tr><td>0x76</td><td>R</td><td>AIN_HIST_LOWEST_VAL</td><td>maximum populated bin of hist</td></tr>
+<tr><td>0x80</td><td>R</td><td>AIN_NUM_RISING_CROSSINGS</td><td>number of rising threshold crossings, recalculated on threshold change</td></tr>
+<tr><td>0x81</td><td>R</td><td>AIN_NUM_FALLING_CROSSINGS</td><td>number of falling threshold crossings, recalculated on threshold change</td></tr>
+<tr><td>0x82</td><td>RW</td><td>AIN_RISING_THRESH</td><td>threshold for rising threshold crossings</td></tr>
+<tr><td>0x83</td><td>RW</td><td>AIN_FALLING_THRESH</td><td>threshold for falling threshold crossings</td></tr>
+<tr><td>0x90</td><td>RW</td><td>WRITE_GPIOS</td><td>Write GPIOS  (bit0 = AUX_EN). First send mask, then send values. Or ask for a read for a readback.</td></tr>
+<tr><td>0xa0</td><td>R</td><td>READ_GPIOS</td><td>read gpios  (bit0 = ALERT)</td></tr>
+<tr><td>0xf3</td><td>R</td><td>RESET_REASON</td><td>reset reason for the MCU</td></tr>
+<tr><td>0xf4</td><td>W</td><td>RESET</td><td>reset the MCU</td></tr>
 
     </table>
 </body>

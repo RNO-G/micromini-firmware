@@ -2,9 +2,9 @@
 #define _RNO_G_GPIO_H
 #include <stdint.h>
 
-extern uint32_t gpio_outputs;
-extern uint32_t gpio_outputs_set_mask;
-extern uint32_t gpio_outputs_set_vals;
+extern volatile uint32_t gpio_outputs;
+extern volatile uint32_t gpio_outputs_set_mask;
+extern volatile uint32_t gpio_outputs_set_vals;
 
 uint32_t gpio_inputs();
 

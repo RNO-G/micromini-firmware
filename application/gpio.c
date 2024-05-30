@@ -2,9 +2,9 @@
 #include "application/driver_init.h"
 
 
-uint32_t gpio_outputs = 0;
-uint32_t gpio_outputs_set_mask = 1;
-uint32_t gpio_outputs_set_vals = 1;
+volatile uint32_t gpio_outputs = 0;
+volatile uint32_t gpio_outputs_set_mask = 1;
+volatile uint32_t gpio_outputs_set_vals = 1;
 
 uint32_t gpio_inputs()
 {

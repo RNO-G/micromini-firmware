@@ -15,15 +15,42 @@ extern struct micromini_measurement
   uint16_t T_local;
   uint16_t T1;
   uint16_t T2;
-  uint16_t bat_mon;
-  uint16_t ain1;
-  uint16_t ain12;
-  uint16_t ain13;
 } measurement;
 
+#define DEFAULT_AIN_SOURCE SOURCE_AIN1
+#define AIN_SIZE 2048
 
-extern int measurement_queued;
-extern uint8_t nmeasurements;
+extern volatile uint8_t ain[AIN_SIZE+1]; //extra due to first bad byte
+extern volatile int ain_ready;
+extern volatile uint8_t ain_nread_div_8_m1; //nread/8 - 1
+
+extern volatile uint16_t ain_hist[256];
+extern volatile uint8_t ain_hist_mode_bin;
+extern volatile uint8_t ain_hist_max;
+extern volatile uint8_t ain_hist_min;
+
+extern volatile uint8_t thresh_rising;
+extern volatile uint8_t thresh_falling;
+extern volatile uint8_t N_rising;
+extern volatile uint8_t N_falling;
+
+void recalculate_crossings();
+
+extern volatile int measurement_queued;
+extern volatile uint8_t nmeasurements;
+
+enum ain_source
+{
+  SOURCE_AIN1,
+  SOURCE_AIN12,
+  SOURCE_AIN13,
+  SOURCE_BATMON,
+  SOURCE_TEMP
+};
+
+void ain_set_source(enum ain_source src);
+void ain_set_rate(uint8_t rate_cfg);
+void ain_set_gain(uint8_t gain_cfg);
 
 void measurement_init();
 int measurement_process(); //returns 1 to inhibit standby

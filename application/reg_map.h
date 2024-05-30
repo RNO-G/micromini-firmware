@@ -25,16 +25,29 @@ enum e_micro_mini_reg {
 	MICROMINI_T1_LSB                           = 0x53, /*[R ] LSB of T1 sensor*/
 	MICROMINI_T2_MSB                           = 0x54, /*[R ] MSB of T2 sensor*/
 	MICROMINI_T2_LSB                           = 0x55, /*[R ] LSB of T2 sensor*/
-	MICROMINI_BAT_MON_LSB                      = 0x60, /*[R ] LSB of battery monitor ADC*/
-	MICROMINI_BAT_MON_MSB                      = 0x61, /*[R ] MSB of battery monitor ADC*/
-	MICROMINI_AIN1_MON_LSB                     = 0x62, /*[R ] LSB of AIN1 ADC*/
-	MICROMINI_AIN1_MON_MSB                     = 0x63, /*[R ] MSB of AIN1 ADC*/
-	MICROMINI_AIN12_MON_LSB                    = 0x64, /*[R ] LSB of AIN12 ADC*/
-	MICROMINI_AIN12_MON_MSB                    = 0x65, /*[R ] MSB of AIN12 ADC*/
-	MICROMINI_AIN13_MON_LSB                    = 0x66, /*[R ] LSB of AIN13 ADC*/
-	MICROMINI_AIN13_MON_MSB                    = 0x67, /*[R ] MSB of AIN13 ADC*/
-	MICROMINI_WRITE_GPIOS                      = 0x90, /*[RW] "Write GPIOS  (bit0 = AUX_EN). First send mask*/
-	MICROMINI_READ_GPIOS                       = 0xa0, /*[R ] READ GPIOS  (bit0 = ALERT)*/
+	MICROMINI_AIN                              = 0x60, /*[R ] Read adc value at AIN_OFFSET.*/
+	MICROMINI_AIN_READY                        = 0x61, /*[R ] Is AIN ready? 0 no, 1 yes*/
+	MICROMINI_AIN_OFFSET                       = 0x62, /*[RW] set byte OFFSET to read*/
+	MICROMINI_AIN_NREAD                        = 0x63, /*[RW] number of samples to send on AIN*/
+	MICROMINI_AIN_SOURCE                       = 0x64, /*[RW] source of AIN (0-3), 0 = AIN1, 1 = AIN12, 2 = AIN13, 3= BAT_MON*/
+	MICROMINI_AIN_RATE                         = 0x65, /*[RW] "ain rate configuration; bits 0-2: clock prescaler*/
+	MICROMINI_AIN_GAIN                         = 0x66, /*[RW] "ain gain configuration; gain 0-3: refsel*/
+	MICROMINI_AIN_NMEAS                        = 0x67, /*[RW] number of samples to measure on conversion, divided by 8 minus 1 (i.e. 0 = 8, 31=256, 63 = 512, 255 = 2048)*/
+	MICROMINI_AIN_HIST                         = 0x70, /*[R ] Read ADC histogram value at AIN_HIST_BIN (saturates at 255, use LSB/MSB to get more*/
+	MICROMINI_AIN_HIST_MSB                     = 0x71, /*[R ] Read ADC histogram MSB value at AIN_HIST_BIN*/
+	MICROMINI_AIN_HIST_LSB                     = 0x72, /*[R ] Read ADC histogram LSB value at AIN_HIST_BIN*/
+	MICROMINI_AIN_HIST_BIN                     = 0x73, /*[RW] histogram bin to read*/
+	MICROMINI_AIN_HIST_MODE_BIN                = 0x74, /*[R ] mode bin of hist*/
+	MICROMINI_AIN_HIST_HIGHEST_VAL             = 0x75, /*[R ] maximum populated bin of hist*/
+	MICROMINI_AIN_HIST_LOWEST_VAL              = 0x76, /*[R ] maximum populated bin of hist*/
+	MICROMINI_AIN_NUM_RISING_CROSSINGS         = 0x80, /*[R ] number of rising threshold crossings, recalculated on threshold change*/
+	MICROMINI_AIN_NUM_FALLING_CROSSINGS        = 0x81, /*[R ] number of falling threshold crossings, recalculated on threshold change*/
+	MICROMINI_AIN_RISING_THRESH                = 0x82, /*[RW] threshold for rising threshold crossings*/
+	MICROMINI_AIN_FALLING_THRESH               = 0x83, /*[RW] threshold for falling threshold crossings*/
+	MICROMINI_WRITE_GPIOS                      = 0x90, /*[RW] Write GPIOS  (bit0 = AUX_EN). First send mask, then send values. Or ask for a read for a readback.*/
+	MICROMINI_READ_GPIOS                       = 0xa0, /*[R ] read gpios  (bit0 = ALERT)*/
+	MICROMINI_RESET_REASON                     = 0xf3, /*[R ] reset reason for the MCU*/
+	MICROMINI_RESET                            = 0xf4, /*[ W] reset the MCU*/
 };
 
 /* X macros for registers */
@@ -61,21 +74,43 @@ X(0x52, T1_MSB) \
 X(0x53, T1_LSB) \
 X(0x54, T2_MSB) \
 X(0x55, T2_LSB) \
-X(0x60, BAT_MON_LSB) \
-X(0x61, BAT_MON_MSB) \
-X(0x62, AIN1_MON_LSB) \
-X(0x63, AIN1_MON_MSB) \
-X(0x64, AIN12_MON_LSB) \
-X(0x65, AIN12_MON_MSB) \
-X(0x66, AIN13_MON_LSB) \
-X(0x67, AIN13_MON_MSB) \
+X(0x60, AIN) \
+X(0x61, AIN_READY) \
+X(0x62, AIN_OFFSET) \
+X(0x63, AIN_NREAD) \
+X(0x64, AIN_SOURCE) \
+X(0x65, AIN_RATE) \
+X(0x66, AIN_GAIN) \
+X(0x67, AIN_NMEAS) \
+X(0x70, AIN_HIST) \
+X(0x71, AIN_HIST_MSB) \
+X(0x72, AIN_HIST_LSB) \
+X(0x73, AIN_HIST_BIN) \
+X(0x74, AIN_HIST_MODE_BIN) \
+X(0x75, AIN_HIST_HIGHEST_VAL) \
+X(0x76, AIN_HIST_LOWEST_VAL) \
+X(0x80, AIN_NUM_RISING_CROSSINGS) \
+X(0x81, AIN_NUM_FALLING_CROSSINGS) \
+X(0x82, AIN_RISING_THRESH) \
+X(0x83, AIN_FALLING_THRESH) \
 X(0x90, WRITE_GPIOS) \
 X(0xa0, READ_GPIOS) \
+X(0xf3, RESET_REASON) \
 
 
 #define MICROMINI_W1_WRITE_REGISTERS \
 X(0x10, MEASURE) \
+X(0x62, AIN_OFFSET) \
+X(0x63, AIN_NREAD) \
+X(0x64, AIN_SOURCE) \
+X(0x65, AIN_RATE) \
+X(0x66, AIN_GAIN) \
+X(0x67, AIN_NMEAS) \
+X(0x73, AIN_HIST_BIN) \
+X(0x82, AIN_RISING_THRESH) \
+X(0x83, AIN_FALLING_THRESH) \
 X(0x90, WRITE_GPIOS) \
+X(0xf4, RESET) \
 
 
 #endif
