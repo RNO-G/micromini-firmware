@@ -21,8 +21,8 @@ volatile uint8_t ain_hist_max;
 volatile uint8_t ain_hist_min;
 
 
-static enum ain_source source = DEFAULT_AIN_SOURCE;
-static enum ain_source new_source = DEFAULT_AIN_SOURCE;
+volatile enum ain_source ain_source = DEFAULT_AIN_SOURCE;
+static volatile enum ain_source last_source = DEFAULT_AIN_SOURCE;
 static const uint8_t source_map[] = { [SOURCE_AIN1] = AIN1, [SOURCE_AIN12] = AIN12, [SOURCE_AIN13] = AIN13, [SOURCE_BATMON] = BAT_MON , [SOURCE_TEMP] = 0x18};
 
 volatile uint8_t thresh_rising = 128;
@@ -30,10 +30,10 @@ volatile uint8_t thresh_falling = 128;
 volatile uint8_t N_rising = 0;
 volatile uint8_t N_falling = 0;
 
-static uint8_t gain_cfg = 0;
-static uint8_t rate_cfg = 0;
-static uint8_t new_gain_cfg = 0;
-static uint8_t new_rate_cfg = 0;
+volatile uint8_t ain_gain_cfg = 0;
+volatile uint8_t ain_rate_cfg = 0;
+static uint8_t last_gain_cfg = 0;
+static uint8_t last_rate_cfg = 0;
 
 static void ain_cb(const struct adc_dma_descriptor * const d)
 {
@@ -221,26 +221,28 @@ int measurement_process()
   //handle potential ADC changes here
   if (!measurement_queued && !measurement_in_progress)
   {
-    if (new_source != source) 
+    if (last_source != ain_source) 
     {
       //do we need to restart ? 
-      adc_dma_set_inputs(&ANALOGIN, source_map[new_source], 0x19,0);
-      source = new_source;
+      adc_dma_set_inputs(&ANALOGIN, source_map[ain_source], 0x19,0);
+      last_source = ain_source;
     }
 
-    if (new_gain_cfg != gain_cfg)
+    if (last_gain_cfg != ain_gain_cfg)
     {
-      adc_dma_set_channel_gain(&ANALOGIN,0, gain_cfg & 0xf);
-      adc_dma_set_reference(&ANALOGIN, (gain_cfg >> 4) & 0xf);
+      adc_dma_set_channel_gain(&ANALOGIN,0, ain_gain_cfg & 0xf);
+      adc_dma_set_reference(&ANALOGIN, (ain_gain_cfg >> 4) & 0xf);
+      last_gain_cfg = ain_gain_cfg;
     }
 
-    if (new_rate_cfg != rate_cfg)
+    if (last_rate_cfg != ain_rate_cfg)
     {
       const void * const hw = ANALOGIN.device.hw;
       hri_adc_clear_CTRLA_ENABLE_bit(hw);
-      hri_adc_write_CTRLB_PRESCALER_bf(hw,rate_cfg & 0x7);
-      hri_adc_write_SAMPCTRL_SAMPLEN_bf(hw,rate_cfg >> 4);
+      hri_adc_write_CTRLB_PRESCALER_bf(hw,ain_rate_cfg & 0x7);
+      hri_adc_write_SAMPCTRL_SAMPLEN_bf(hw,ain_rate_cfg >> 4);
       hri_adc_set_CTRLA_ENABLE_bit(hw);
+      last_rate_cfg = ain_rate_cfg;
     }
   }
 
@@ -310,17 +312,3 @@ int measurement_process()
 
 }
 
-void ain_set_source(enum ain_source src)
-{
-  new_source = src;
-}
-
-void ain_set_rate(uint8_t update_rate_cfg)
-{
-  new_rate_cfg = update_rate_cfg;
-}
-
-void ain_set_gain(uint8_t update_gain_cfg)
-{
-  new_gain_cfg = update_gain_cfg;
-}

@@ -117,6 +117,15 @@ static volatile uint8_t * handle_readbacks(int * N)
     case AWAITING_GPIO_MASK:
       rx_mode = READY;
       return &gpio_outputs;
+    case AWAITING_AIN_SOURCE:
+      rx_mode = READY;
+      return (uint8_t*) &ain_source;
+    case AWAITING_AIN_RATE:
+      rx_mode = READY;
+      return &ain_rate_cfg;
+    case AWAITING_AIN_GAIN:
+      rx_mode = READY;
+      return &ain_gain_cfg;
     default:
       rx_mode = READY;
       return &fail_byte;
@@ -197,15 +206,15 @@ static  void rx_callback(const struct i2c_s_async_descriptor * const desc)
       rx_mode = READY;
       return;
     case AWAITING_AIN_SOURCE:
-      ain_set_source(c & 0xf);
+      ain_source = (c & 0xf);
       rx_mode = READY;
       break;
     case AWAITING_AIN_RATE:
-      ain_set_rate(c);
+      ain_rate_cfg = c;
       rx_mode = READY;
       break;
     case AWAITING_AIN_GAIN:
-      ain_set_gain(c);
+      ain_gain_cfg = c;
       rx_mode = READY;
       break;
     case AWAITING_HIST_BIN:

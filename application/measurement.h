@@ -48,9 +48,9 @@ enum ain_source
   SOURCE_TEMP
 };
 
-void ain_set_source(enum ain_source src);
-void ain_set_rate(uint8_t rate_cfg);
-void ain_set_gain(uint8_t gain_cfg);
+extern volatile enum ain_source ain_source;
+extern volatile uint8_t ain_rate_cfg;
+extern volatile uint8_t ain_gain_cfg;
 
 void measurement_init();
 int measurement_process(); //returns 1 to inhibit standby
