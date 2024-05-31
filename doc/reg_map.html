@@ -36,8 +36,8 @@
 <tr><td>0x62</td><td>RW</td><td>AIN_OFFSET</td><td>set byte OFFSET to read</td></tr>
 <tr><td>0x63</td><td>RW</td><td>AIN_NREAD</td><td>number of samples to send on AIN</td></tr>
 <tr><td>0x64</td><td>RW</td><td>AIN_SOURCE</td><td>source of AIN (0-3), 0 = AIN1, 1 = AIN12, 2 = AIN13, 3= BAT_MON</td></tr>
-<tr><td>0x65</td><td>RW</td><td>AIN_RATE</td><td>"ain rate configuration; bits 0-2: clock prescaler</td></tr>
-<tr><td>0x66</td><td>RW</td><td>AIN_GAIN</td><td>"ain gain configuration; gain 0-3: refsel</td></tr>
+<tr><td>0x65</td><td>RW</td><td>AIN_RATE</td><td>ain rate configuration; bits 0-2: clock prescaler, bits 3-7 SAMPLEN</td></tr>
+<tr><td>0x66</td><td>RW</td><td>AIN_GAIN</td><td>ain gain configuration; bits 0-3: gain;  bits 4-7: ref</td></tr>
 <tr><td>0x67</td><td>RW</td><td>AIN_NMEAS</td><td>number of samples to measure on conversion, divided by 8 minus 1 (i.e. 0 = 8, 31=256, 63 = 512, 255 = 2048)</td></tr>
 <tr><td>0x70</td><td>R</td><td>AIN_HIST</td><td>Read ADC histogram value at AIN_HIST_BIN (saturates at 255, use LSB/MSB to get more</td></tr>
 <tr><td>0x71</td><td>R</td><td>AIN_HIST_MSB</td><td>Read ADC histogram MSB value at AIN_HIST_BIN</td></tr>

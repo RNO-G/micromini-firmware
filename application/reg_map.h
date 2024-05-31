@@ -30,8 +30,8 @@ enum e_micro_mini_reg {
 	MICROMINI_AIN_OFFSET                       = 0x62, /*[RW] set byte OFFSET to read*/
 	MICROMINI_AIN_NREAD                        = 0x63, /*[RW] number of samples to send on AIN*/
 	MICROMINI_AIN_SOURCE                       = 0x64, /*[RW] source of AIN (0-3), 0 = AIN1, 1 = AIN12, 2 = AIN13, 3= BAT_MON*/
-	MICROMINI_AIN_RATE                         = 0x65, /*[RW] "ain rate configuration; bits 0-2: clock prescaler*/
-	MICROMINI_AIN_GAIN                         = 0x66, /*[RW] "ain gain configuration; gain 0-3: refsel*/
+	MICROMINI_AIN_RATE                         = 0x65, /*[RW] ain rate configuration; bits 0-2: clock prescaler, bits 3-7 SAMPLEN*/
+	MICROMINI_AIN_GAIN                         = 0x66, /*[RW] ain gain configuration; bits 0-3: gain;  bits 4-7: ref*/
 	MICROMINI_AIN_NMEAS                        = 0x67, /*[RW] number of samples to measure on conversion, divided by 8 minus 1 (i.e. 0 = 8, 31=256, 63 = 512, 255 = 2048)*/
 	MICROMINI_AIN_HIST                         = 0x70, /*[R ] Read ADC histogram value at AIN_HIST_BIN (saturates at 255, use LSB/MSB to get more*/
 	MICROMINI_AIN_HIST_MSB                     = 0x71, /*[R ] Read ADC histogram MSB value at AIN_HIST_BIN*/
