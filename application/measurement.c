@@ -4,6 +4,7 @@
 #include "hpl_time_measure.h"
 #include "application/i2cbus.h"
 #include "application/time.h"
+#include "hpl_adc_config.h"
 
 struct micromini_measurement measurement;
 static struct micromini_measurement next_measurement;
@@ -31,13 +32,13 @@ volatile uint8_t thresh_rising = 128;
 volatile uint8_t thresh_falling = 128;
 volatile uint8_t N_rising = 0;
 volatile uint8_t N_falling = 0;
-volatile static system_time_t adc_start;
-volatile static system_time_t adc_end;
+static volatile system_time_t adc_start;
+static volatile system_time_t adc_end;
 
-volatile uint8_t ain_gain_cfg = 0;
-volatile uint8_t ain_rate_cfg = 0;
-static uint8_t last_gain_cfg = 0;
-static uint8_t last_rate_cfg = 0;
+volatile uint8_t ain_gain_cfg = CONF_ADC_0_GAIN | CONF_ADC_0_REFSEL << 4 ;
+volatile uint8_t ain_rate_cfg = CONF_ADC_0_PRESCALER | CONF_ADC_0_SAMPLEN << 3;
+static uint8_t last_gain_cfg = CONF_ADC_0_GAIN | CONF_ADC_0_REFSEL << 4 ;
+static uint8_t last_rate_cfg = CONF_ADC_0_PRESCALER | CONF_ADC_0_SAMPLEN << 3;
 
 static volatile int nain_cb = 0;
 static volatile int is_conversion_complete = 0;
@@ -331,7 +332,7 @@ int measurement_process()
     memcpy(&measurement,&next_measurement, sizeof(measurement));
   }
 
-  return measurement_in_progress || measurement_queued;
+  return measurement_in_progress || measurement_queued || adc_in_progress;
 
 }
 
