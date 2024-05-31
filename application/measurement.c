@@ -1,6 +1,7 @@
 #include "application/measurement.h"
 #include "application/driver_init.h"
 #include <string.h>
+#include "hpl_time_measure.h"
 #include "application/i2cbus.h"
 #include "application/time.h"
 
@@ -15,21 +16,23 @@ volatile uint8_t nmeasurements = 0;
 
 volatile uint8_t ain[AIN_SIZE];
 volatile int ain_ready;
-volatile uint8_t ain_nread_div_8_m1 = 31;
+volatile uint8_t ain_nread_div_8_m1 = 0x31;
 volatile uint16_t ain_hist[256];
 volatile uint8_t ain_hist_mode_bin;
 volatile uint8_t ain_hist_max;
 volatile uint8_t ain_hist_min;
 
 
-volatile enum ain_source ain_source = DEFAULT_AIN_SOURCE;
-static volatile enum ain_source last_source = DEFAULT_AIN_SOURCE;
+volatile enum ain_source ain_source = SOURCE_AIN1;
+static volatile enum ain_source last_source = SOURCE_AIN1;
 static const uint8_t source_map[] = { [SOURCE_AIN1] = 0x1, [SOURCE_AIN12] = 12 , [SOURCE_AIN13] = 13, [SOURCE_BATMON] = BAT_MON , [SOURCE_TEMP] = 0x18};
 
 volatile uint8_t thresh_rising = 128;
 volatile uint8_t thresh_falling = 128;
 volatile uint8_t N_rising = 0;
 volatile uint8_t N_falling = 0;
+volatile static system_time_t adc_start;
+volatile static system_time_t adc_end;
 
 volatile uint8_t ain_gain_cfg = 0;
 volatile uint8_t ain_rate_cfg = 0;
@@ -41,6 +44,7 @@ static volatile int is_conversion_complete = 0;
 static void ain_cb(const struct adc_dma_descriptor * const d)
 {
   (void) d;
+  adc_end = _system_time_get(NULL);
   nain_cb++;
 
   adc_dma_disable_channel(&ANALOGIN,0);
@@ -281,6 +285,7 @@ int measurement_process()
       adc_in_progress = 1;
       ain_ready = 0;
       adc_dma_enable_channel(&ANALOGIN, 0);
+      adc_start = _system_time_get(NULL);
       adc_dma_read(&ANALOGIN, ain, 8*(ain_nread_div_8_m1+1));
     }
 
