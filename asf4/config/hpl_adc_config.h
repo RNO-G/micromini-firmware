@@ -45,7 +45,7 @@
 // <i> These bits define the ADC clock relative to the peripheral clock (PRESCALER)
 // <id> adc_prescaler
 #ifndef CONF_ADC_0_PRESCALER
-#define CONF_ADC_0_PRESCALER 0x5
+#define CONF_ADC_0_PRESCALER 0x4
 #endif
 
 // <q> Free Running Mode
