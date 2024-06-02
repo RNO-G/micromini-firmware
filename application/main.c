@@ -2,6 +2,8 @@
 #include "application/driver_init.h"
 #include "application/time.h"
 #include "application/i2c_client.h"
+#include "hal_calendar.h" 
+#include "hal_sleep.h" 
 #include "application/io.h"
 #include "application/printf.h"
 #include "application/i2cbus.h"
@@ -12,6 +14,24 @@
 
 static uint64_t nticks =0;
 int last_feed;
+static int woke = 0;
+
+static void wakeup()
+{
+  woke = 1;
+}
+
+
+
+void do_sleep(int how_long)
+{
+  int cmp = _calendar_get_counter(&CALENDAR.device)+how_long; 
+  _calendar_register_callback(&CALENDAR.device,wakeup); 
+  _calendar_set_comp(&CALENDAR.device,cmp); 
+  woke=0;
+  return sleep(3);
+}
+
 
 int main(void)
 {
@@ -48,9 +68,11 @@ int main(void)
   i2c_client_init();
   measurement_init();
   gpio_init();
+  int awake_ticks = 0;
 
   while (1)
   {
+    awake_ticks = 0;
     time_process();
     int up = uptime();
 
@@ -66,7 +88,12 @@ int main(void)
     int cant_sleep = measurement_process();
     gpio_process();
 
-    delay_ms(50);
+    if (!cant_sleep && awake_ticks > 50)
+    {
+      awake_ticks = 0;
+      do_sleep(10);
+    }
+    delay_ms(10);
     nticks++;
   }
 }

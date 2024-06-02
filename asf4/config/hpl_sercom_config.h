@@ -35,7 +35,7 @@
 // <i> Determine if the module shall run in standby sleep mode
 // <id> i2c_slave_runstdby
 #ifndef CONF_SERCOM_0_I2CS_RUNSTDBY
-#define CONF_SERCOM_0_I2CS_RUNSTDBY 0
+#define CONF_SERCOM_0_I2CS_RUNSTDBY 1
 #endif
 
 // <o> SDA Hold Time (SDAHOLD)
