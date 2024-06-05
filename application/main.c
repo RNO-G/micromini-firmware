@@ -12,6 +12,20 @@
 #include "application/gpio.h"
 
 
+static unsigned nhf = 0;
+void HardFault_Handler()
+{
+  nhf++;
+  _reset_mcu();
+}
+
+void WDT_Handler()
+{
+  static unsigned nwdt;
+  hri_wdt_clear_INTFLAG_EW_bit(WDT);
+  nwdt++;
+}
+
 static uint64_t nticks =0;
 int last_feed;
 static int woke = 0;
@@ -23,7 +37,7 @@ static void wakeup()
 
 
 
-void do_sleep(int how_long)
+static int do_sleep(int how_long)
 {
   int cmp = _calendar_get_counter(&CALENDAR.device)+how_long; 
   _calendar_register_callback(&CALENDAR.device,wakeup); 
@@ -72,7 +86,6 @@ int main(void)
 
   while (1)
   {
-    awake_ticks = 0;
     time_process();
     int up = uptime();
 
@@ -88,10 +101,12 @@ int main(void)
     int cant_sleep = measurement_process();
     gpio_process();
 
-    if (!cant_sleep && awake_ticks > 50)
+    if (!cant_sleep && awake_ticks++ > 50)
     {
       awake_ticks = 0;
-      do_sleep(10);
+      wdt_feed(&INTERNAL_WATCHDOG);
+      last_feed=up;
+      do_sleep(7);
     }
     delay_ms(10);
     nticks++;
