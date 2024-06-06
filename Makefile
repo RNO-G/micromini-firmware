@@ -68,7 +68,7 @@ help:
 
 
 # MCU
-mcu: $(MKDIRS) $(OUTPUT_NAME).bin  $(OUTPUT_NAME).hex $(OUTPUT_NAME).uf2 rev
+mcu: $(MKDIRS) $(OUTPUT_NAME).bin $(OUTPUT_NAME).combined.bin  $(OUTPUT_NAME).hex $(OUTPUT_NAME).uf2 rev
 
 rev:
 	echo REV_$(REV) > $(BUILD_DIR)/rev.txt
@@ -83,13 +83,14 @@ endif
 endif
 
 
+%.combined.bin: bootloader.bin %.bin
+	cat $^ > $@
 
 %.bin: %.elf
 	$(OC) -O binary $< $@
 
 %.uf2: %.bin
 	-uf2conv.py -i $< -o $@
-
 
 %.hex: %.elf
 	$(OC) -O ihex -R .eeprom -R .fuse -R .lock -R .signature $< $@
