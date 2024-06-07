@@ -311,7 +311,7 @@ struct subcommand subcommands[] =
   {.name = "get-ain-num-samples", .type = SUBCOMMAND_INTERPRET_REG, .interpret_opts = {.reg = MICROMINI_AIN_NMEAS, .fn = interpret_ain_nmeas },.doc = "Retrieve the number of samples to measure"},
   {.name = "set-ain-num-samples", .arg_name = "nsamples-div8-m1", .type = SUBCOMMAND_WRITE_REG, .write_opts = {.reg = MICROMINI_AIN_NMEAS },.doc = "Set the number of samples to measure, divided by 8 and minus 1"},
   {.name = "get-ain-highest-val", .read_opts = {.reg = MICROMINI_AIN_HIST_HIGHEST_VAL},.doc = "Get the maximum value reached in ain"},
-  {.name = "get-ain-lowest-val", .read_opts = {.reg = MICROMINI_AIN_HIST_HIGHEST_VAL},.doc = "Get the minimum value reached in ain"},
+  {.name = "get-ain-lowest-val", .read_opts = {.reg = MICROMINI_AIN_HIST_LOWEST_VAL},.doc = "Get the minimum value reached in ain"},
   {.name = "get-ain-mode", .read_opts = {.reg = MICROMINI_AIN_HIST_MODE_BIN},.doc = "Get the most common value in ain"},
   {.name = "get-ain", .type = SUBCOMMAND_FN, .fn_opts = {.fn = read_ain},.doc = "Read out ain"},
   {.name = "get-ain-hist", .type = SUBCOMMAND_FN, .fn_opts = {.fn = read_ain_hist},.doc = "Read out ain hist"},
