@@ -333,8 +333,8 @@ static int read_measurements(uint8_t *arg)
   int pv_v = pv_lsb | ( pv_msb << 8);
   int delta_turb_v = delta_turb_lsb  | ( delta_turb_msb << 8);
   int delta_pv_v = delta_pv_lsb  | ( delta_pv_msb << 8);
-  printf("\t PV:  %0.3f V, %0.3f A\n", pv_v * 0.025, delta_pv_v * 0.04166666666666666);
-  printf("\t TURBINE:  %0.3f V, %0.3f A\n", turb_v * 0.025, delta_turb_v * 0.0416666666);
+  printf("\t PV:  %0.3f V, %0.3f A\n", pv_v * 0.025, delta_pv_v * 0.004166666666666666);
+  printf("\t TURBINE:  %0.3f V, %0.3f A\n", turb_v * 0.025, delta_turb_v * 0.00416666666);
   return 0;
 }
 
