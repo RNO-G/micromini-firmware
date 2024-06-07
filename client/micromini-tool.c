@@ -168,9 +168,13 @@ static int read_ain_hist(uint8_t *arg)
   if (ioctl(fd, I2C_RDWR, &i2c_data) < 0 ) return -errno;
 
   printf("AIN_HIST = ");
-  for (uint8_t i = 0; i < minv; i++)
+  if (minv == 1)
   {
-    printf("[%hhu:0]", i);
+    printf("[0:0]");
+  }
+  else if (minv > 1)
+  {
+    printf("[0-%hhu:0]", minv-1);
   }
 
   for (uint8_t i = minv; i <= maxv; i++) 
@@ -192,9 +196,13 @@ static int read_ain_hist(uint8_t *arg)
     uint16_t val = lsb | (msb << 8);
     printf("[%hhu:%hu]", i,val);
   }
-  for (uint8_t i = maxv+1; i != 0x0; i++)
+  if (maxv == 254)
   {
-    printf("[%hhu:0]", i);
+    printf("[255:0]");
+  }
+  else if (maxv < 254)
+  {
+    printf("[%hhu-255:0]", maxv+1);
   }
 
   printf("\n");
