@@ -329,10 +329,10 @@ static int read_measurements(uint8_t *arg)
   printf("\t T_local = %d.%s", tlocal_msb, sixteenths[tlocal_lsb>>4]);
   printf("\t T1 = %d.%s", t1_msb, sixteenths[t1_lsb>>4]);
   printf("\t T2 = %d.%s", t2_msb, sixteenths[t2_lsb>>4]);
-  int turb_v = turb_lsb  | (turb_msb << 8);
-  int pv_v = pv_lsb | ( pv_msb << 8);
-  int delta_turb_v = delta_turb_lsb  | ( delta_turb_msb << 8);
-  int delta_pv_v = delta_pv_lsb  | ( delta_pv_msb << 8);
+  int turb_v = (turb_lsb  | (turb_msb << 8)) >> 4;
+  int pv_v = (pv_lsb | ( pv_msb << 8)) >> 4;
+  int delta_turb_v = (delta_turb_lsb  | ( delta_turb_msb << 8)) >> 4;
+  int delta_pv_v = (delta_pv_lsb  | ( delta_pv_msb << 8)) >> 4;
   printf("\t PV:  %0.3f V, %0.3f A\n", pv_v * 0.025, delta_pv_v * 0.04166666666666666);
   printf("\t TURBINE:  %0.3f V, %0.3f A\n", turb_v * 0.025, delta_turb_v * 0.0416666666);
   return 0;
