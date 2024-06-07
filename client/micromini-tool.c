@@ -372,6 +372,8 @@ struct subcommand subcommands[] =
   {.name = "get-ain-hist", .type = SUBCOMMAND_FN, .fn_opts = {.fn = read_ain_hist},.doc = "Read out ain hist"},
   {.name = "get-ain-source", .read_opts = {.reg = MICROMINI_AIN_SOURCE},.doc = "Get AIN source index (0 = AIN1, 1 = AIN2, 2 = AIN3, 3 = BAT_MON)"},
   {.name = "set-ain-source", .type = SUBCOMMAND_WRITE_REG, .arg_name = "source-index", .write_opts = {.reg = MICROMINI_AIN_SOURCE},.doc = "Set AIN source index (0 = AIN1, 1 = AIN2, 2 = AIN3, 3 = BAT_MON)"},
+  {.name = "get-ain-rate", .read_opts = {.reg = MICROMINI_AIN_RATE},.doc = "Get AIN rate configuration (bits 0-2: ADC prescaler, bits 3-7 SAMPLELEN)"},
+  {.name = "set-ain-rate", .type = SUBCOMMAND_WRITE_REG, .arg_name = "rate-cfg-index", .write_opts = {.reg = MICROMINI_AIN_RATE},.doc = "Set AIN rate configuration (bits 0-2: ADC prescaler, bits 3-7 SAMPLELEN)"},
 };
 
 
