@@ -328,7 +328,7 @@ static int read_measurements(uint8_t *arg)
   printf("Measurement at uptime = %u\n", uptime);
   printf("\t T_local = %d.%s", tlocal_msb, sixteenths[tlocal_lsb>>4]);
   printf("\t T1 = %d.%s", t1_msb, sixteenths[t1_lsb>>4]);
-  printf("\t T2 = %d.%s", t2_msb, sixteenths[t2_lsb>>4]);
+  printf("\t T2 = %d.%s\n", t2_msb, sixteenths[t2_lsb>>4]);
   int turb_v = turb_lsb  | (turb_msb << 8);
   int pv_v = pv_lsb | ( pv_msb << 8);
   int delta_turb_v = delta_turb_lsb  | ( delta_turb_msb << 8);
