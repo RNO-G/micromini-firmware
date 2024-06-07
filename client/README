@@ -1,0 +1,67 @@
+make to compile
+
+you can source micromini-tool.completions to get tab-completion
+
+Not all functionality is exposed yet (changing gain, sample rate, reference voltage, read gpio). Will be implemented if needed.
+
+
+TLDR:
+
+ ./micromini-tool id
+Should get back 0xab
+
+ ./micromini-tool measure
+ Queue a measurement
+
+ ./micromini-tool read-sensor-measurement
+ Read out the measurement
+
+ ./micromini-tool get-ain
+ Read out all the samples (slow)
+
+
+Full Usage: 
+	micromini-tool reset 
+		Reset micromini
+	micromini-tool measure 
+		Initiate a measurement
+	micromini-tool id 
+		Retrieve ID, should return 0xab
+	micromini-tool get-num-sensor-measurements 
+		Returns the number of measurements (wrapping uint8)
+	micromini-tool get-sensor-measurent-age 
+		Returns the age of the measurement (saturating uint8)
+	micromini-tool read-sensor-measurement 
+		Retrieve all sensor measurements
+	micromini-tool get-ain-ready 
+		Is AIN ready?
+	micromini-tool get-ain-nrising 
+		Get number of rising threshold crossings
+	micromini-tool get-ain-nfalling 
+		Get number of falling threshold crossings
+	micromini-tool set-ain-rising-threshold rising-threshold
+		Set rising threshold
+	micromini-tool set-ain-falling-threshold falling-threshold
+		Set falling threshold
+	micromini-tool get-ain-rising-threshold 
+		Get rising threshold
+	micromini-tool get-ain-falling-threshold 
+		Get falling threshold
+	micromini-tool get-ain-num-samples 
+		Retrieve the number of samples to measure
+	micromini-tool set-ain-num-samples nsamples-div8-m1
+		Set the number of samples to measure, divided by 8 and minus 1
+	micromini-tool get-ain-highest-val 
+		Get the maximum value reached in ain
+	micromini-tool get-ain-lowest-val 
+		Get the minimum value reached in ain
+	micromini-tool get-ain-mode 
+		Get the most common value in ain
+	micromini-tool get-ain 
+		Read out ain
+	micromini-tool get-ain-hist 
+		Read out ain hist
+	micromini-tool get-ain-source 
+		Get AIN source index (0 = AIN1, 1 = AIN2, 2 = AIN3, 3 = BAT_MON)
+	micromini-tool set-ain-source source-index
+		Set AIN source index (0 = AIN1, 1 = AIN2, 2 = AIN3, 3 = BAT_MON)
