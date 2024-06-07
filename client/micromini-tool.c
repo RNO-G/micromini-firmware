@@ -39,27 +39,6 @@ struct subcommand
   };
 };
 
-static int do_touch(uint8_t reg)
-{
-
-  uint8_t buf[1] = {reg};
-  struct i2c_msg msg = 
-  {
-    .addr = MICROMINI_ADDR, 
-    .flags = 0, 
-    .len = 1,
-    .buf = buf 
-  }; 
-
-  struct i2c_rdwr_ioctl_data i2c_data = {.msgs = &msg, .nmsgs = 1 }; 
-
-  if (ioctl(fd, I2C_RDWR, &i2c_data) < 0 )
-  {
-    return -errno; 
-  }
-
-  return 0; 
-}
 
 
 static int touch_reg(const struct subcommand * sub)
@@ -68,7 +47,7 @@ static int touch_reg(const struct subcommand * sub)
   struct i2c_msg msg =
   {
     .addr = MICROMINI_ADDR,
-    .len = 1, 
+    .len = 1,
     .buf = &reg
   };
   struct i2c_rdwr_ioctl_data i2c_data = {.msgs = &msg, .nmsgs = 1};
