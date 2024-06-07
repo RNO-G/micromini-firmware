@@ -10,6 +10,6 @@ micromini-tool.completions: micromini-tool
 	echo complete -W \"`./micromini-tool --shortlist`\" micromini-tool>> $@
 
 micromini-tool: micromini-tool.c
-	$(CC) -o $@ -g -Os $^
+	$(CC) -Wall -o $@ -g -Os $^
 
 
