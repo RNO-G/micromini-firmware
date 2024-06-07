@@ -200,6 +200,7 @@ static int read_ain(uint8_t * arg)
 
     if (ioctl(fd, I2C_RDWR, &i2c_data) < 0 ) return -errno; 
     for (int j = 0; j < 8; j++) printf(" %hhu ", rd[j]);
+    i+=8;
   }
 
   //restore old nread
