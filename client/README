@@ -20,48 +20,52 @@ Should get back 0xab
  Read out all the samples (slow). Also probably want to wait long enough for measurement to complete (can check with get-ain ready)
 
 
-Full Usage: 
-	micromini-tool reset 
+Full Usage:
+	micromini-tool reset
 		Reset micromini
-	micromini-tool measure 
+	micromini-tool measure
 		Initiate a measurement
-	micromini-tool id 
+	micromini-tool id
 		Retrieve ID, should return 0xab
-	micromini-tool get-num-sensor-measurements 
+	micromini-tool get-num-sensor-measurements
 		Returns the number of measurements (wrapping uint8)
-	micromini-tool get-sensor-measurent-age 
+	micromini-tool get-sensor-measurent-age
 		Returns the age of the measurement (saturating uint8)
-	micromini-tool read-sensor-measurement 
+	micromini-tool read-sensor-measurement
 		Retrieve all sensor measurements
-	micromini-tool get-ain-ready 
+	micromini-tool get-ain-ready
 		Is AIN ready?
-	micromini-tool get-ain-nrising 
+	micromini-tool get-ain-nrising
 		Get number of rising threshold crossings
-	micromini-tool get-ain-nfalling 
+	micromini-tool get-ain-nfalling
 		Get number of falling threshold crossings
 	micromini-tool set-ain-rising-threshold rising-threshold
 		Set rising threshold
 	micromini-tool set-ain-falling-threshold falling-threshold
 		Set falling threshold
-	micromini-tool get-ain-rising-threshold 
+	micromini-tool get-ain-rising-threshold
 		Get rising threshold
-	micromini-tool get-ain-falling-threshold 
+	micromini-tool get-ain-falling-threshold
 		Get falling threshold
-	micromini-tool get-ain-num-samples 
+	micromini-tool get-ain-num-samples
 		Retrieve the number of samples to measure
 	micromini-tool set-ain-num-samples nsamples-div8-m1
 		Set the number of samples to measure, divided by 8 and minus 1
-	micromini-tool get-ain-highest-val 
+	micromini-tool get-ain-highest-val
 		Get the maximum value reached in ain
-	micromini-tool get-ain-lowest-val 
+	micromini-tool get-ain-lowest-val
 		Get the minimum value reached in ain
-	micromini-tool get-ain-mode 
+	micromini-tool get-ain-mode
 		Get the most common value in ain
-	micromini-tool get-ain 
+	micromini-tool get-ain
 		Read out ain
-	micromini-tool get-ain-hist 
+	micromini-tool get-ain-hist
 		Read out ain hist
-	micromini-tool get-ain-source 
+	micromini-tool get-ain-source
 		Get AIN source index (0 = AIN1, 1 = AIN2, 2 = AIN3, 3 = BAT_MON)
 	micromini-tool set-ain-source source-index
 		Set AIN source index (0 = AIN1, 1 = AIN2, 2 = AIN3, 3 = BAT_MON)
+	micromini-tool get-ain-rate
+		Get AIN rate configuration (bits 0-2: ADC prescaler, bits 3-7 SAMPLELEN)
+	micromini-tool set-ain-rate rate-cfg
+		Set AIN rate configuration (bits 0-2: ADC prescaler, bits 3-7 SAMPLELEN)
