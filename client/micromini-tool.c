@@ -192,7 +192,7 @@ static int read_ain_hist(uint8_t *arg)
     uint16_t val = lsb | (msb << 8);
     printf("[%hhu:%hu]", i,val);
   }
-  for (uint8_t i = maxv+1; i <= 0xff; i++)
+  for (uint8_t i = maxv+1; i != 0x0; i++)
   {
     printf("[%hhu:0]", i);
   }
