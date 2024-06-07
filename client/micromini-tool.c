@@ -240,6 +240,17 @@ int main(int nargs, char ** args)
 {
   if (nargs > 1 && nargs < 4)
   {
+    //used for completion! 
+    if (!strcmp(args[1],"--shortlist"))
+    {
+
+      for (int isub = 0; isub < sizeof(subcommands) / sizeof (*subcommands); isub++)
+      {
+        printf("%s%s", isub == 0 ?  "" : " ",  subcommands[isub].name);
+      }
+      printf("\n");
+      return 0;
+    }
     for (int isub = 0; isub < sizeof(subcommands) / sizeof (*subcommands); isub++)
     {
       if (!strcmp(args[1], subcommands[isub].name)) //match
