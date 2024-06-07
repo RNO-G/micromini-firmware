@@ -81,6 +81,29 @@ static int write_reg(uint8_t arg, const struct subcommand * sub)
 }
 
 
+static int interpet_reg(const struct subcommand * sub)
+{
+
+  uint8_t reg = sub->read_opts.reg;
+
+  uint8_t val;
+  struct i2c_msg txn[2] =
+  {
+    { .addr = MICROMINI_ADDR, .len = 1, .buf = &reg},
+    { .addr = MICROMINI_ADDR, .flags = I2C_M_RD, .len = 1, .buf = &val}
+  };
+
+  struct i2c_rdwr_ioctl_data i2c_data = {.msgs = txn, .nmsgs = 2 };
+
+  if (ioctl(fd, I2C_RDWR, &i2c_data) < 0 )
+  {
+    return -errno;
+  }
+
+  printf("%s\n",sub->interpret_opts.fn(val));
+
+  return 0;
+}
 static int read_reg(const struct subcommand * sub)
 {
 
@@ -359,6 +382,8 @@ int main(int nargs, char ** args)
             return touch_reg(&subcommands[isub]);
           case SUBCOMMAND_WRITE_REG:
             return  write_reg(arg, &subcommands[isub]);
+          case SUBCOMMAND_INTERPRET_REG:
+            return  interpet_reg(&subcommands[isub]);
           case SUBCOMMAND_FN:
             return subcommands[isub].fn_opts.fn( nargs == 3 ? &arg : 0);
           default:
