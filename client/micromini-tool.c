@@ -36,6 +36,7 @@ struct subcommand
     struct { uint8_t reg; uint8_t mask; } write_opts;
     struct { uint8_t reg; } touch_opts;
     struct { int (* fn) (uint8_t *arg); } fn_opts;
+    struct { const char * (* fn) (uint8_t val); uint8_t reg; } interpret_opts;
   };
 };
 
@@ -54,10 +55,10 @@ static int touch_reg(const struct subcommand * sub)
 
   if (ioctl(fd, I2C_RDWR, &i2c_data) < 0 )
   {
-    return -errno; 
+    return -errno;
   }
 
-  return 0; 
+  return 0;
 }
 
 static int write_reg(uint8_t arg, const struct subcommand * sub)
@@ -76,6 +77,7 @@ static int write_reg(uint8_t arg, const struct subcommand * sub)
   {
     return -errno;
   }
+  return 0;
 }
 
 
@@ -124,12 +126,72 @@ const char * sixteenths[16] =
   "875",
   "9375",
 };
+static int read_ain_hist(uint8_t *arg)
+{
+  (void) arg;
+
+  return 0;
+
+}
 
 
+static int read_ain(uint8_t * arg)
+{
+  (void) arg; 
+  // figure out how many we need to read, and the old window size
+
+  uint8_t nmeas = MICROMINI_AIN_NMEAS;
+  uint8_t old_nread[] = {MICROMINI_AIN_NREAD,0};
+  uint8_t new_nread[] = {MICROMINI_AIN_NREAD,8};
+  struct i2c_msg txn_init[] = {
+    {.addr = MICROMINI_ADDR, .len =1, .buf = &nmeas},
+    {.addr = MICROMINI_ADDR,.flags=I2C_M_RD, .len =1, .buf = &nmeas},
+    {.addr = MICROMINI_ADDR, .len =1, .buf = old_nread},
+    {.addr = MICROMINI_ADDR,.flags=I2C_M_RD, .len =1, .buf = old_nread+1},
+    {.addr = MICROMINI_ADDR, .len =2, .buf = new_nread }, // set nread to 8
+  };
+
+  struct i2c_rdwr_ioctl_data i2c_data = {.msgs = txn_init, .nmsgs =sizeof(txn_init)/sizeof(*txn_init)};
+  if (ioctl(fd, I2C_RDWR, &i2c_data) < 0 ) return -errno; 
+
+  int N = 8*(nmeas+1);
+
+  // we will read out 8 at a time for now
+
+  int i = 0;
+  uint8_t set_offset[2] = { MICROMINI_AIN_OFFSET, 0};
+  uint8_t rd[8];
+  uint8_t ain = MICROMINI_AIN;
+
+  printf("AIN = [ ");
+  while (i < N)
+  {
+    set_offset[1] = i;
+    struct i2c_msg txn[] = {
+      { .addr = MICROMINI_ADDR, .len =2 , .buf = set_offset }, 
+      { .addr = MICROMINI_ADDR, .len =1 , .buf = &ain },
+      { .addr = MICROMINI_ADDR, .len =8 , .flags = I2C_M_RD, .buf = rd}
+    };
+    i2c_data.msgs = txn;
+    i2c_data.nmsgs = 3;
+
+    if (ioctl(fd, I2C_RDWR, &i2c_data) < 0 ) return -errno; 
+    for (int j = 0; j < 8; j++) printf(" %hhu ", rd[j]);
+  }
+
+  //restore old nread
+  struct i2c_msg txn_final = { .addr = MICROMINI_ADDR, .len =2, .buf = old_nread };
+  i2c_data.msgs = &txn_final;
+  i2c_data.nmsgs = 1;
+  if (ioctl(fd, I2C_RDWR, &i2c_data) < 0 ) return -errno;
+  printf("]\n");
+  return 0;
+}
 
 static int read_measurements(uint8_t *arg)
 {
 
+  (void) arg;
 
   uint8_t pv_lsb =   MICROMINI_PV_LSB;
   uint8_t pv_msb =  MICROMINI_PV_MSB;
@@ -151,8 +213,8 @@ static int read_measurements(uint8_t *arg)
   int8_t t2_msb = MICROMINI_T2_MSB;
 
 #define QUEUE(x) \
-    { .addr = MICROMINI_ADDR, .flags = 0, .len =1, .buf = &x},\
-    { .addr = MICROMINI_ADDR, .flags = I2C_M_RD, .len =1, .buf = &x},
+    { .addr = MICROMINI_ADDR, .flags = 0, .len =1, .buf = (uint8_t*) &x},\
+    { .addr = MICROMINI_ADDR, .flags = I2C_M_RD, .len =1, .buf = (uint8_t*) &x},
 
   struct i2c_msg txn[] = {
     QUEUE(pv_lsb)
@@ -197,8 +259,19 @@ static int read_measurements(uint8_t *arg)
   return 0;
 }
 
+const char * interpret_ain_nmeas(uint8_t val)
+{
+  static char buf[8];
+  int ival = (val+1)*8;
+  sprintf(buf,"%u",ival);
+  return buf;
+}
+
+
+
 struct subcommand subcommands[] =
 {
+  {.name = "reset", .type = SUBCOMMAND_TOUCH_REG, .touch_opts = {.reg = MICROMINI_RESET }, .doc = "Reset micromini"},
   {.name = "measure", .type = SUBCOMMAND_TOUCH_REG, .touch_opts = {.reg = MICROMINI_MEASURE}, .doc = "Initiate a measurement" },
   {.name = "id", .type = SUBCOMMAND_READ_REG,  .read_opts = {. reg = MICROMINI_ID, .hex = 1}, .doc = "Retrieve ID, should return 0xab" },
   {.name = "get-num-sensor-measurements", .type = SUBCOMMAND_READ_REG, .read_opts = { .reg = MICROMINI_NMEASUREMENTS }, .doc= "Returns the number of measurements (wrapping uint8)"},
@@ -206,8 +279,18 @@ struct subcommand subcommands[] =
   {.name = "read-sensor-measurement", .type = SUBCOMMAND_FN, .fn_opts = {.fn= read_measurements }, .doc= "Retrieve all sensor measurements"},
   {.name = "get-ain-ready", .type = SUBCOMMAND_READ_REG, .read_opts = { .reg = MICROMINI_AIN_READY }, .doc = "Is AIN ready?"},
   {.name = "get-ain-nrising", .type = SUBCOMMAND_READ_REG, .read_opts = {.reg = MICROMINI_AIN_NUM_RISING_CROSSINGS}, .doc = "Get number of rising threshold crossings"},
-  {.name = "set-ain-rising-threshold", .arg_name = "rising-threshold", .write_opts = {.reg = MICROMINI_AIN_RISING_THRESH }, .doc = "Set rising threshold"},
-  {.name = "set-ain-falling-threshold", .arg_name = "falling-threshold", .write_opts = {.reg = MICROMINI_AIN_FALLING_THRESH },.doc = "Set rising threshold"},
+  {.name = "get-ain-nfalling", .type = SUBCOMMAND_READ_REG, .read_opts = {.reg = MICROMINI_AIN_NUM_FALLING_CROSSINGS}, .doc = "Get number of falling threshold crossings"},
+  {.name = "set-ain-rising-threshold", .type = SUBCOMMAND_WRITE_REG, .arg_name = "rising-threshold", .write_opts = {.reg = MICROMINI_AIN_RISING_THRESH }, .doc = "Set rising threshold"},
+  {.name = "set-ain-falling-threshold", .type = SUBCOMMAND_WRITE_REG, .arg_name = "falling-threshold", .write_opts = {.reg = MICROMINI_AIN_FALLING_THRESH },.doc = "Set rising threshold"},
+  {.name = "get-ain-num-samples", .type = SUBCOMMAND_INTERPRET_REG, .interpret_opts = {.reg = MICROMINI_AIN_NMEAS, .fn = interpret_ain_nmeas },.doc = "Retrieve the number of samples to measure"},
+  {.name = "set-ain-num-samples", .arg_name = "nsamples-div8-m1", .type = SUBCOMMAND_WRITE_REG, .write_opts = {.reg = MICROMINI_AIN_NMEAS },.doc = "Set the number of samples to measure, divided by 8 and minus 1"},
+  {.name = "get-ain-highest-val", .read_opts = {.reg = MICROMINI_AIN_HIST_HIGHEST_VAL},.doc = "Get the maximum value reached in ain"},
+  {.name = "get-ain-lowest-val", .read_opts = {.reg = MICROMINI_AIN_HIST_HIGHEST_VAL},.doc = "Get the minimum value reached in ain"},
+  {.name = "get-ain-mode", .read_opts = {.reg = MICROMINI_AIN_HIST_MODE_BIN},.doc = "Get the most common value in ain"},
+  {.name = "get-ain", .type = SUBCOMMAND_FN, .fn_opts = {.fn = read_ain},.doc = "Read out ain"},
+  {.name = "get-ain-hist", .type = SUBCOMMAND_FN, .fn_opts = {.fn = read_ain_hist},.doc = "Read out ain hist"},
+  {.name = "get-ain-source", .read_opts = {.reg = MICROMINI_AIN_SOURCE},.doc = "Get AIN source index (0 = AIN1, 1 = AIN2, 2 = AIN3, 3 = BAT_MON)"},
+  {.name = "set-ain-source", .type = SUBCOMMAND_WRITE_REG, .arg_name = "source-index", .write_opts = {.reg = MICROMINI_AIN_SOURCE},.doc = "Set AIN source index (0 = AIN1, 1 = AIN2, 2 = AIN3, 3 = BAT_MON)"},
 };
 
 
@@ -231,7 +314,7 @@ int main(int nargs, char ** args)
       if (!strcmp(args[1], subcommands[isub].name)) //match
       {
         //check number of args
-        if (subcommands[isub].arg_name && nargs == 2 || !subcommands[isub].arg_name && nargs == 3)
+        if ( (subcommands[isub].arg_name && nargs == 2) || (!subcommands[isub].arg_name && nargs == 3))
         {
           fprintf(stderr,"subcommand %s has wrong number of args (%d)\n", subcommands[isub].name, nargs-2);
           fprintf(stderr,"Usage: micromini-tool %s %s\n", subcommands[isub].name, subcommands[isub].arg_name ?: "");
