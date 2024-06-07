@@ -2,7 +2,7 @@ make to compile
 
 you can source micromini-tool.completions to get tab-completion
 
-Not all functionality is exposed yet (changing gain, sample rate, reference voltage, read gpio). Will be implemented if needed.
+Not all functionality is exposed yet (changing gain, reference voltage, read gpio). Will be implemented if needed.
 
 
 TLDR:
