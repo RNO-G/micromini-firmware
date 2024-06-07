@@ -106,7 +106,7 @@ static int read_reg(const struct subcommand * sub)
   return 0;
 }
 
-const char * sixteenths[] =
+const char * sixteenths[16] =
 { "0",
   "0625",
   "125",
@@ -144,11 +144,11 @@ static int read_measurements(uint8_t *arg)
   uint8_t when2 =  MICROMINI_WHEN_BYTE_2;
   uint8_t when3 = MICROMINI_WHEN_BYTE_3;
   uint8_t tlocal_lsb =  MICROMINI_T_LOCAL_LSB;
-  uint8_t tlocal_msb =  MICROMINI_T_LOCAL_MSB;
+  int8_t tlocal_msb =  MICROMINI_T_LOCAL_MSB;
   uint8_t t1_lsb =  MICROMINI_T1_LSB;
-  uint8_t t1_msb =  MICROMINI_T1_MSB;
+  int8_t t1_msb =  MICROMINI_T1_MSB;
   uint8_t t2_lsb =  MICROMINI_T2_LSB;
-  uint8_t t2_msb = MICROMINI_T2_MSB;
+  int8_t t2_msb = MICROMINI_T2_MSB;
 
 #define QUEUE(x) \
     { .addr = MICROMINI_ADDR, .flags = 0, .len =1, .buf = &x},\
@@ -183,19 +183,15 @@ static int read_measurements(uint8_t *arg)
   }
 
 
- uint32_t uptime =
-    (when0 & 0xff) |
-    ((when1 & 0xff) << 8) | 
-    ((when2 & 0xff) << 16) | 
-    ((when3 & 0xff) << 24);
-  printf("Measurement at uptime = %u\n");
+  uint32_t uptime = when0 | (when1 << 8) | (when2 <<16) | (when3 << 24);
+  printf("Measurement at uptime = %u\n", uptime);
   printf("\t T_local = %d.%s", tlocal_msb, sixteenths[tlocal_lsb]);
   printf("\t T1 = %d.%s", t1_msb, sixteenths[t1_lsb]);
   printf("\t T2 = %d.%s", t2_msb, sixteenths[t2_lsb]);
-  int turb_v = (turb_lsb & 0xff ) | (( turb_msb & 0xff) << 8);
-  int pv_v = (pv_lsb & 0xff ) | (( pv_msb & 0xff) << 8);
-  int delta_turb_v = (delta_turb_lsb & 0xff ) | (( delta_turb_msb & 0xff) << 8);
-  int delta_pv_v = (delta_pv_lsb & 0xff ) | (( delta_pv_msb & 0xff) << 8);
+  int turb_v = turb_lsb  | (turb_msb << 8);
+  int pv_v = pv_lsb | ( pv_msb << 8);
+  int delta_turb_v = delta_turb_lsb  | ( delta_turb_msb << 8);
+  int delta_pv_v = delta_pv_lsb  | ( delta_pv_msb << 8);
   printf("\t PV:  %0.3f V, %0.3f A\n", pv_v * 0.025, delta_pv_v * 0.04166666666666666);
   printf("\t TURBINE:  %0.3f V, %0.3f A\n", turb_v * 0.025, delta_turb_v * 0.0416666666);
   return 0;
