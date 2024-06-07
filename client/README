@@ -17,7 +17,7 @@ Should get back 0xab
  Read out the measurement
 
  ./micromini-tool get-ain
- Read out all the samples (slow)
+ Read out all the samples (slow). Also probably want to wait long enough for measurement to complete (can check with get-ain ready)
 
 
 Full Usage: 
