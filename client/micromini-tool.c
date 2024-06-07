@@ -81,10 +81,10 @@ static int write_reg(uint8_t arg, const struct subcommand * sub)
 }
 
 
-static int interpet_reg(const struct subcommand * sub)
+static int interpret_reg(const struct subcommand * sub)
 {
 
-  uint8_t reg = sub->read_opts.reg;
+  uint8_t reg = sub->interpret_opts.reg;
 
   uint8_t val;
   struct i2c_msg txn[2] =
@@ -383,7 +383,7 @@ int main(int nargs, char ** args)
           case SUBCOMMAND_WRITE_REG:
             return  write_reg(arg, &subcommands[isub]);
           case SUBCOMMAND_INTERPRET_REG:
-            return  interpet_reg(&subcommands[isub]);
+            return  interpret_reg(&subcommands[isub]);
           case SUBCOMMAND_FN:
             return subcommands[isub].fn_opts.fn( nargs == 3 ? &arg : 0);
           default:
