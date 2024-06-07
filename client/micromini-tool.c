@@ -165,7 +165,7 @@ static int read_ain(uint8_t * arg)
 
   uint8_t nmeas = MICROMINI_AIN_NMEAS;
   uint8_t old_nread[] = {MICROMINI_AIN_NREAD,0};
-  uint8_t new_nread[] = {MICROMINI_AIN_NREAD,8};
+  uint8_t new_nread[] = {MICROMINI_AIN_NREAD,7};//minus 1
   struct i2c_msg txn_init[] = {
     {.addr = MICROMINI_ADDR, .len =1, .buf = &nmeas},
     {.addr = MICROMINI_ADDR,.flags=I2C_M_RD, .len =1, .buf = &nmeas},
