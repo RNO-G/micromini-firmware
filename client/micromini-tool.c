@@ -152,6 +152,53 @@ const char * sixteenths[16] =
 static int read_ain_hist(uint8_t *arg)
 {
   (void) arg;
+  //start by getting max and min vals 
+
+  uint8_t minv = MICROMINI_AIN_HIST_LOWEST_VAL;
+  uint8_t maxv = MICROMINI_AIN_HIST_HIGHEST_VAL;
+
+  struct i2c_msg txn_init[] = {
+    {.addr = MICROMINI_ADDR, .len = 1, .buf = &minv},
+    {.addr = MICROMINI_ADDR, .flags = I2C_M_RD, .len = 1, .buf = &minv},
+    {.addr = MICROMINI_ADDR, .len = 1, .buf = &maxv},
+    {.addr = MICROMINI_ADDR, .flags = I2C_M_RD, .len = 1, .buf = &maxv},
+  };
+
+  struct i2c_rdwr_ioctl_data i2c_data = {.msgs = txn_init, .nmsgs =sizeof(txn_init)/sizeof(*txn_init)};
+  if (ioctl(fd, I2C_RDWR, &i2c_data) < 0 ) return -errno;
+
+  printf("AIN_HIST = ");
+  for (uint8_t i = 0; i < minv; i++)
+  {
+    printf("[%hhu:0]", i);
+  }
+
+  for (uint8_t i = minv; i <= maxv; i++) 
+  {
+    uint8_t set_bin[2] = {MICROMINI_AIN_HIST_BIN,i};
+    uint8_t msb = MICROMINI_AIN_HIST_MSB;
+    uint8_t lsb = MICROMINI_AIN_HIST_LSB;
+    struct i2c_msg txn[] = {
+      { .addr = MICROMINI_ADDR, .len = 2, .buf = set_bin },
+      { .addr = MICROMINI_ADDR, .len = 1, .buf = &msb },
+      { .addr = MICROMINI_ADDR, .flags = I2C_M_RD, .len = 1, .buf = &msb },
+      { .addr = MICROMINI_ADDR, .len = 1, .buf = &lsb },
+      { .addr = MICROMINI_ADDR, .flags = I2C_M_RD, .len = 1, .buf = &lsb },
+    };
+    i2c_data.msgs = txn;
+    i2c_data.nmsgs = 5;
+
+    if (ioctl(fd, I2C_RDWR, &i2c_data) < 0 ) return -errno;
+    uint16_t val = lsb | (msb << 8);
+    printf("[%hhu:%hu]", i,val);
+  }
+  for (uint8_t i = maxv+1; i <= 0xff; i++)
+  {
+    printf("[%hhu:0]", i);
+  }
+
+  printf("\n");
+
 
   return 0;
 
