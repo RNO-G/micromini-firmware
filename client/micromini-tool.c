@@ -326,11 +326,11 @@ static int read_measurements(uint8_t *arg)
 
   uint32_t uptime = when0 | (when1 << 8) | (when2 <<16) | (when3 << 24);
   printf("Measurement at uptime = %u\n", uptime);
-  int tlocal = tlocal_msb - 64;
+  int tlocal = (int) ((uint8_t)(tlocal_msb+64)) - 64;
   printf("\t T_local = %d.%s", tlocal, sixteenths[tlocal_lsb>>4]);
 
-  int t1 = t1_msb - 64;
-  int t2 = t2_msb - 64;
+  int t1 = (int) ((uint8_t)(t1_msb+64)) - 64;
+  int t2 = (int) ((uint8_t)(t2_msb+64)) - 64;
   printf("\t T1 = %d.%s", t1, sixteenths[t1_lsb>>4]);
   printf("\t T2 = %d.%s\n", t2, sixteenths[t2_lsb>>4]);
   int turb_v = turb_lsb  | (turb_msb << 8);
