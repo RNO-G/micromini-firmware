@@ -386,6 +386,15 @@ const char * interpret_ain_nmeas(uint8_t val)
   return buf;
 }
 
+const char * interpret_ain_rate(uint8_t val)
+{
+  static char buf[128];
+  int prescal = val & 0x7;
+  int samplen = val >>3;
+  sprintf(buf,"Prescaler: %d, SAMPLEN: %d", prescal, samplen);
+  return buf;
+}
+
 
 
 struct subcommand subcommands[] =
