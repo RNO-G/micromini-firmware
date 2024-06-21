@@ -312,6 +312,9 @@ int measurement_process()
     if (ltc.last_read == last_scheduled && last_temp_read == last_scheduled)
     {
 
+      next_measurement.T_local_MSB_raw = last_local_t[1];
+      next_measurement.T1_MSB_raw = last_remote1_t[1];
+      next_measurement.T2_MSB_raw = last_remote1_t[1];
       next_measurement.T_local = (last_local_t[1]-64) << 8 | last_local_t[0];
       next_measurement.T1 = (last_remote1_t[1]-64) << 8 | last_remote1_t[0];
       next_measurement.T2 = (last_remote2_t[1]-64) << 8 | last_remote2_t[0];

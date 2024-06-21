@@ -10,6 +10,9 @@
   <table border=1>
     <tr> <td> Register </td> <td> Type (R|W|RW) </td> <td> Name </td> <td> Description </td> </tr>
 <tr><td>0x0</td><td>R</td><td>ID</td><td>returns 0xab</td></tr>
+<tr><td>0x1</td><td>R</td><td>MAJ_VER</td><td>major version (or 0xd0 if not implemented)</td></tr>
+<tr><td>0x2</td><td>R</td><td>MIN_VER</td><td>minor version (or 0xd0 if not implemented)</td></tr>
+<tr><td>0x3</td><td>R</td><td>REV_VER</td><td>rev version (or 0xd0 if not implemented)</td></tr>
 <tr><td>0x10</td><td>W</td><td>MEASURE</td><td>queue a new measurement</td></tr>
 <tr><td>0x11</td><td>R</td><td>MEASUREMENT_AGE</td><td>age of last measurement in seconds ( saturating at 255)</td></tr>
 <tr><td>0x12</td><td>R</td><td>NMEASUREMENTS</td><td>number of measurements taken (wrapping)</td></tr>
@@ -31,6 +34,9 @@
 <tr><td>0x53</td><td>R</td><td>T1_LSB</td><td>LSB of T1 sensor</td></tr>
 <tr><td>0x54</td><td>R</td><td>T2_MSB</td><td>MSB of T2 sensor</td></tr>
 <tr><td>0x55</td><td>R</td><td>T2_LSB</td><td>LSB of T2 sensor</td></tr>
+<tr><td>0x5a</td><td>R</td><td>T_LOCAL_MSB_RAW</td><td>RAW_MSB of T_LOCAL sensor</td></tr>
+<tr><td>0x5b</td><td>R</td><td>T1_MSB_RAW</td><td>RAW_MSB of T1 sensor</td></tr>
+<tr><td>0x5c</td><td>R</td><td>T2_MSB_RAW</td><td>RAW_MSB of T2 sensor</td></tr>
 <tr><td>0x60</td><td>R</td><td>AIN</td><td>Read adc value at AIN_OFFSET.</td></tr>
 <tr><td>0x61</td><td>R</td><td>AIN_READY</td><td>Is AIN ready? 0 no, 1 yes</td></tr>
 <tr><td>0x62</td><td>RW</td><td>AIN_OFFSET</td><td>set byte OFFSET to read</td></tr>

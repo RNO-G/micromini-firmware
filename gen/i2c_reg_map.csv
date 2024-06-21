@@ -1,5 +1,8 @@
 REG, TYPE,NAME, DESCRIPTION
 0x00, R, ID, returns 0xab
+0x01, R, MAJ_VER, major version (or 0xd0 if not implemented)
+0x02, R, MIN_VER, minor version (or 0xd0 if not implemented)
+0x03, R, REV_VER, rev version (or 0xd0 if not implemented)
 0x10, W, MEASURE, queue a new measurement
 0x11, R, MEASUREMENT_AGE, age of last measurement in seconds ( saturating at 255)
 0x12, R, NMEASUREMENTS, number of measurements taken (wrapping)
@@ -21,6 +24,9 @@ REG, TYPE,NAME, DESCRIPTION
 0x53, R, T1_LSB, LSB of T1 sensor
 0x54, R, T2_MSB, MSB of T2 sensor
 0x55, R, T2_LSB, LSB of T2 sensor
+0x5a, R, T_LOCAL_MSB_RAW, RAW_MSB of T_LOCAL sensor
+0x5b, R, T1_MSB_RAW, RAW_MSB of T1 sensor
+0x5c, R, T2_MSB_RAW, RAW_MSB of T2 sensor
 0x60, R, AIN,"Read adc value at AIN_OFFSET."
 0x61, R, AIN_READY,"Is AIN ready? 0 no, 1 yes"
 0x62, RW, AIN_OFFSET,"set byte OFFSET to read"

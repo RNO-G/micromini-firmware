@@ -15,6 +15,9 @@ extern struct micromini_measurement
   uint16_t T_local;
   uint16_t T1;
   uint16_t T2;
+  uint8_t T_local_MSB_raw;
+  uint8_t T1_MSB_raw;
+  uint8_t T2_MSB_raw;
 } measurement;
 
 #define DEFAULT_AIN_SOURCE SOURCE_AIN1

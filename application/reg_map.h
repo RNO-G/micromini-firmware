@@ -4,6 +4,9 @@
 
 enum e_micro_mini_reg {
 	MICROMINI_ID                               = 0x00, /*[R ] returns 0xab*/
+	MICROMINI_MAJ_VER                          = 0x01, /*[R ] major version (or 0xd0 if not implemented)*/
+	MICROMINI_MIN_VER                          = 0x02, /*[R ] minor version (or 0xd0 if not implemented)*/
+	MICROMINI_REV_VER                          = 0x03, /*[R ] rev version (or 0xd0 if not implemented)*/
 	MICROMINI_MEASURE                          = 0x10, /*[ W] queue a new measurement*/
 	MICROMINI_MEASUREMENT_AGE                  = 0x11, /*[R ] age of last measurement in seconds ( saturating at 255)*/
 	MICROMINI_NMEASUREMENTS                    = 0x12, /*[R ] number of measurements taken (wrapping)*/
@@ -25,6 +28,9 @@ enum e_micro_mini_reg {
 	MICROMINI_T1_LSB                           = 0x53, /*[R ] LSB of T1 sensor*/
 	MICROMINI_T2_MSB                           = 0x54, /*[R ] MSB of T2 sensor*/
 	MICROMINI_T2_LSB                           = 0x55, /*[R ] LSB of T2 sensor*/
+	MICROMINI_T_LOCAL_MSB_RAW                  = 0x5a, /*[R ] RAW_MSB of T_LOCAL sensor*/
+	MICROMINI_T1_MSB_RAW                       = 0x5b, /*[R ] RAW_MSB of T1 sensor*/
+	MICROMINI_T2_MSB_RAW                       = 0x5c, /*[R ] RAW_MSB of T2 sensor*/
 	MICROMINI_AIN                              = 0x60, /*[R ] Read adc value at AIN_OFFSET.*/
 	MICROMINI_AIN_READY                        = 0x61, /*[R ] Is AIN ready? 0 no, 1 yes*/
 	MICROMINI_AIN_OFFSET                       = 0x62, /*[RW] set byte OFFSET to read*/
@@ -54,6 +60,9 @@ enum e_micro_mini_reg {
 
 #define MICROMINI_W1_READ_REGISTERS \
 X(0x0, ID) \
+X(0x1, MAJ_VER) \
+X(0x2, MIN_VER) \
+X(0x3, REV_VER) \
 X(0x11, MEASUREMENT_AGE) \
 X(0x12, NMEASUREMENTS) \
 X(0x20, PV_LSB) \
@@ -74,6 +83,9 @@ X(0x52, T1_MSB) \
 X(0x53, T1_LSB) \
 X(0x54, T2_MSB) \
 X(0x55, T2_LSB) \
+X(0x5a, T_LOCAL_MSB_RAW) \
+X(0x5b, T1_MSB_RAW) \
+X(0x5c, T2_MSB_RAW) \
 X(0x60, AIN) \
 X(0x61, AIN_READY) \
 X(0x62, AIN_OFFSET) \

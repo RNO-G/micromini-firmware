@@ -3,6 +3,7 @@
 #include "application/time.h"
 #include "application/reg_map.h"
 #include "application/gpio.h"
+#include "config/config.h"
 #include "application/measurement.h"
 
 
@@ -245,6 +246,15 @@ static  void rx_callback(const struct i2c_s_async_descriptor * const desc)
     case MICROMINI_ID:
       queue_byte(0xab);
       break;
+    case MICROMINI_MAJ_VER:
+      queue_byte(VER_MAJ);
+      break;
+    case MICROMINI_MIN_VER:
+      queue_byte(VER_MIN);
+      break;
+    case MICROMINI_REV_VER:
+      queue_byte(VER_REV);
+      break;
     case MICROMINI_MEASURE:
       measurement_queued=1;
       break;
@@ -281,14 +291,20 @@ static  void rx_callback(const struct i2c_s_async_descriptor * const desc)
       queue_byte(measurement.T_local & 0xff); break;
     case MICROMINI_T_LOCAL_MSB:
       queue_byte(measurement.T_local >> 8 ); break;
+    case MICROMINI_T_LOCAL_MSB_RAW:
+      queue_byte(measurement.T_local_MSB_raw ); break;
     case MICROMINI_T1_LSB:
       queue_byte(measurement.T1 & 0xff); break;
     case MICROMINI_T1_MSB:
       queue_byte(measurement.T1 >> 8 ); break;
+    case MICROMINI_T1_MSB_RAW:
+      queue_byte(measurement.T1_MSB_raw ); break;
     case MICROMINI_T2_LSB:
       queue_byte(measurement.T2 & 0xff); break;
     case MICROMINI_T2_MSB:
       queue_byte(measurement.T2 >> 8 ); break;
+    case MICROMINI_T2_MSB_RAW:
+      queue_byte(measurement.T2_MSB_raw ); break;
     case MICROMINI_AIN:
       rx_mode = AIN_READING;
       break;
