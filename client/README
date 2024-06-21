@@ -27,6 +27,8 @@ Full Usage:
 		Initiate a measurement
 	micromini-tool id
 		Retrieve ID, should return 0xab
+  micromini-tool version                                                                                                          │Read 4 bytes @ address 0x00002FA6 (Data = 0xF890F003)
+    Get the version
 	micromini-tool get-num-sensor-measurements
 		Returns the number of measurements (wrapping uint8)
 	micromini-tool get-sensor-measurent-age
