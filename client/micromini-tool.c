@@ -131,6 +131,42 @@ static int read_reg(const struct subcommand * sub)
   return 0;
 }
 
+static int read_version(uint8_t*)
+{
+  uint8_t reg[3] = {MICROMINI_MAJ_VER, MICROMINI_MIN_VER, MICROMINI_REV_VER};
+  uint8_t ver[3] = {0xd0, 0xd0, 0xd0};
+  struct i2c_msg txn[6] = {0};
+  for (int i = 0; i < 3 ; i++)
+  {
+    txn[2*i].addr = MICROMINI_ADDR;
+    txn[2*i].len = 1;
+    txn[2*i].buf = &reg[i];
+    txn[2*i+1].addr = MICROMINI_ADDR;
+    txn[2*i+1].len = 1;
+    txn[2*i+1].buf = &ver[i];
+    txn[2*i+1].flags = I2C_M_RD;
+  }
+
+  struct i2c_rdwr_ioctl_data i2c_data = {.msgs = txn, .nmsgs = 6 };
+  if (ioctl(fd, I2C_RDWR, &i2c_data) < 0 )
+  {
+    return -errno;
+  }
+
+  if (ver[0] == 0xd0 && ver[1] == 0xd0 && ver[2] == 0xd0)
+  {
+    printf("micromini version: 0.0.0\n");
+  }
+
+  else
+  {
+    printf("micromini version: %hhu.%hhd.%hhd\n", ver[0],ver[1],ver[2]);
+
+  }
+  return 0;
+
+}
+
 const char * sixteenths[16] =
 { "0",
   "0625",
@@ -326,11 +362,11 @@ static int read_measurements(uint8_t *arg)
 
   uint32_t uptime = when0 | (when1 << 8) | (when2 <<16) | (when3 << 24);
   printf("Measurement at uptime = %u\n", uptime);
-  int tlocal = (int) ((uint8_t)(tlocal_msb+64)) - 64;
+  int tlocal = (int) ((uint8_t)(tlocal_msb+64)) - 64; //this probably does nothing..
   printf("\t T_local = %d.%s", tlocal, sixteenths[tlocal_lsb>>4]);
 
-  int t1 = (int) ((uint8_t)(t1_msb+64)) - 64;
-  int t2 = (int) ((uint8_t)(t2_msb+64)) - 64;
+  int t1 = (int) ((uint8_t)(t1_msb+64)) - 64; //this probably does nothing..
+  int t2 = (int) ((uint8_t)(t2_msb+64)) - 64; //this probably does nothing..
   printf("\t T1 = %d.%s", t1, sixteenths[t1_lsb>>4]);
   printf("\t T2 = %d.%s\n", t2, sixteenths[t2_lsb>>4]);
   int turb_v = turb_lsb  | (turb_msb << 8);
@@ -356,6 +392,7 @@ struct subcommand subcommands[] =
 {
   {.name = "reset", .type = SUBCOMMAND_TOUCH_REG, .touch_opts = {.reg = MICROMINI_RESET }, .doc = "Reset micromini"},
   {.name = "measure", .type = SUBCOMMAND_TOUCH_REG, .touch_opts = {.reg = MICROMINI_MEASURE}, .doc = "Initiate a measurement" },
+  {.name = "version", .type = SUBCOMMAND_FN, .fn_opts = {.fn = read_version}, .doc = "Get the version" },
   {.name = "id", .type = SUBCOMMAND_READ_REG,  .read_opts = {. reg = MICROMINI_ID, .hex = 1}, .doc = "Retrieve ID, should return 0xab" },
   {.name = "get-num-sensor-measurements", .type = SUBCOMMAND_READ_REG, .read_opts = { .reg = MICROMINI_NMEASUREMENTS }, .doc= "Returns the number of measurements (wrapping uint8)"},
   {.name = "get-sensor-measurent-age", .type = SUBCOMMAND_READ_REG, .read_opts = { .reg = MICROMINI_MEASUREMENT_AGE }, .doc ="Returns the age of the measurement (saturating uint8)"},
