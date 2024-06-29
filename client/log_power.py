@@ -7,7 +7,7 @@ def get_hostname():
     sp = subprocess.run(["hostnamectl", "hostname"], capture_output=True)
     sp.check_returncode()
     return sp.stdout.decode("utf-8").strip('\n')
-    
+
 
 def measure():
     sp = subprocess.run(["./micromini-tool", "measure"])
@@ -77,11 +77,16 @@ if __name__ == "__main__":
     host = get_hostname()
     while True:
         fname = get_file_name(prefix=f"/data/power/{host}_power_")
-        measure()
-        time.sleep(1)
 
-        data = read_measurement()
-        data = parse_data(data)
-        write_to_file(fname, data)
+        try:
+            measure()
+            time.sleep(1)
+
+            data = read_measurement()
+
+            data = parse_data(data)
+            write_to_file(fname, data)
+        except subprocess.CalledProcessError as e:
+            print(e)
 
         time.sleep(time_interval_between_measurments)
