@@ -502,5 +502,7 @@ int main(int nargs, char ** args)
      fprintf(stderr,"\tmicromini-tool %s %s\n", subcommands[isub].name, subcommands[isub].arg_name?:"");
      fprintf(stderr,"\t\t%s\n", subcommands[isub].doc);
   }
+
+  return 0;
 }
 
