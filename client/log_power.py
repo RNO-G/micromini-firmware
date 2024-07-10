@@ -2,6 +2,7 @@ import datetime
 import subprocess
 import re
 import time
+import sys
 
 def get_hostname():
     sp = subprocess.run(["hostnamectl", "hostname"], capture_output=True)
@@ -71,8 +72,7 @@ def parse_data(data):
     return data
 
 
-if __name__ == "__main__":
-
+def log_power():
     time_interval_between_measurments = 20  # sec
     host = get_hostname()
     while True:
@@ -90,3 +90,29 @@ if __name__ == "__main__":
             print(e)
 
         time.sleep(time_interval_between_measurments)
+
+
+def copy_data():
+
+    cmd = ["rsync", "-rav", "/data/power/*_power_*txt", "10.1.0.1:/data/power-logs/"]
+
+    while True:
+        sp = subprocess.run(cmd, capture_output=True)
+        sp.check_returncode()
+        print(sp.stdout)
+
+        time.sleep(3600)  # every hour
+
+
+if __name__ == "__main__":
+
+    mode = sys.argv[1]
+
+    if mode not in ["log", "copy"]:
+        sys.exit("The first argument must be either 'power' or'copy'. Exit ... ")
+
+    if mode == "log":
+        log_power()
+
+    if mode == "copy":
+        copy_data()
