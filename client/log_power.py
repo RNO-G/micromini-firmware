@@ -104,8 +104,8 @@ def copy_data():
     cmd = ["rsync -rav /data/power/*_power_*txt rno-g@10.1.0.1:/data/power-logs/"]
 
     sp = subprocess.run(cmd, capture_output=True, shell=True)
-    sp.check_returncode()
     print("Output:", sp.stdout, "\n", "Error:", sp.stderr)
+    sp.check_returncode()
 
 
 
