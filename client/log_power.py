@@ -75,6 +75,8 @@ def parse_data(data):
 def log_power():
     time_interval_between_measurments = 20  # sec
     host = get_hostname()
+
+    counter = 0
     while True:
         fname = get_file_name(prefix=f"/data/power/{host}_power_")
 
@@ -91,28 +93,33 @@ def log_power():
 
         time.sleep(time_interval_between_measurments)
 
+        if counter % (3600 // time_interval_between_measurments) == 0:
+            copy_data()
+
+        counter += 1
+
 
 def copy_data():
 
-    cmd = ["rsync", "-rav", "/data/power/*_power_*txt", "10.1.0.1:/data/power-logs/"]
+    cmd = ["rsync -rav /data/power/*_power_*txt 10.1.0.1:/data/power-logs/"]
 
-    while True:
-        sp = subprocess.run(cmd, capture_output=True)
-        sp.check_returncode()
-        print(sp.stdout)
+    sp = subprocess.run(cmd, capture_output=True, shell=True)
+    sp.check_returncode()
+    print("Output:", sp.stdout, "\n", "Error:", sp.stderr)
 
-        time.sleep(3600)  # every hour
 
 
 if __name__ == "__main__":
 
-    mode = sys.argv[1]
+    # mode = sys.argv[1]
 
-    if mode not in ["log", "copy"]:
-        sys.exit("The first argument must be either 'power' or'copy'. Exit ... ")
+    # if mode not in ["log", "copy"]:
+    #     sys.exit("The first argument must be either 'power' or'copy'. Exit ... ")
 
-    if mode == "log":
-        log_power()
+    # if mode == "log":
+    #     log_power()
 
-    if mode == "copy":
-        copy_data()
+    # if mode == "copy":
+    #     copy_data()
+
+    log_power()
