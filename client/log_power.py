@@ -14,6 +14,14 @@ def measure():
     sp = subprocess.run(["./micromini-tool", "measure"])
     sp.check_returncode()
 
+
+def reset():
+    # We experienced infrequently issues with the data in some stations
+    # which were solved with running the resetting ...
+    sp = subprocess.run(["./micromini-tool", "reset"])
+    sp.check_returncode()
+
+
 def read_measurement():
     sp = subprocess.run(["./micromini-tool", "read-sensor-measurement"], capture_output=True)
     sp.check_returncode()
@@ -32,15 +40,18 @@ def read_ain():
 
     return sp.stdout
 
+
 def get_file_name(prefix="power_"):
     fname = prefix + datetime.datetime.now(datetime.UTC).strftime("%Y_%m_%d") + ".txt"
     return fname
+
 
 def write_to_file(fname, data, separator="\n"):
 
     with open(fname, "a") as f:
         f.write(str(data))
         f.write(separator)
+
 
 def parse_data(data):
     uptime_str, temperature_str, pv_str, wind_str, _ = data.split(b"\n")
@@ -95,6 +106,7 @@ def log_power():
 
         if counter % (3600 // time_interval_between_measurments) == 0:
             copy_data()
+            reset()
 
         counter += 1
 
