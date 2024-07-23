@@ -1,0 +1,7 @@
+[Unit]
+Description=Take and copy monitoring data of the 2024 power system
+
+[Service]
+User=rno-g
+Restart=always
+ExecStart=/usr/bin/python3 /home/rno-g/micromini-firmware/client/log_power.py
