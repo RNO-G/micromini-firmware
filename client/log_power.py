@@ -3,6 +3,9 @@ import subprocess
 import re
 import time
 import sys
+import os
+
+DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 
 def get_hostname():
     sp = subprocess.run(["hostnamectl", "hostname"], capture_output=True)
@@ -11,21 +14,21 @@ def get_hostname():
 
 
 def measure():
-    sp = subprocess.run(["./micromini-tool", "measure"])
+    sp = subprocess.run([f"{DIRECTORY}/micromini-tool", "measure"])
     sp.check_returncode()
 
 def read_measurement():
-    sp = subprocess.run(["./micromini-tool", "read-sensor-measurement"], capture_output=True)
+    sp = subprocess.run([f"{DIRECTORY}/micromini-tool", "read-sensor-measurement"], capture_output=True)
     sp.check_returncode()
     return sp.stdout
 
 def read_ain():
     while True:
-        sp = subprocess.run(["./micromini-tool", "get-ain-ready"], capture_output=True)
+        sp = subprocess.run([f"{DIRECTORY}/micromini-tool", "get-ain-ready"], capture_output=True)
 
         m = re.match(b"get-ain-ready: ([0,1])\n", sp.stdout)
         if int(m.group(1)):
-            sp = subprocess.run(["./micromini-tool", "get-ain-ready"], capture_output=True)
+            sp = subprocess.run([f"{DIRECTORY}/micromini-tool", "get-ain-ready"], capture_output=True)
             sp.check_returncode()
 
             break
