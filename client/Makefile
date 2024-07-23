@@ -12,4 +12,6 @@ micromini-tool.completions: micromini-tool
 micromini-tool: micromini-tool.c
 	$(CC) -Wall -o $@ -g -Os $^
 
-
+service-install:
+	install *.service /etc/systemd/system
+	systemctl daemon-reload
