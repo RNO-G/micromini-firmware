@@ -21,7 +21,7 @@ def measure():
 def reset():
     # We experienced infrequently issues with the data in some stations
     # which were solved with running the resetting ...
-    sp = subprocess.run(["./micromini-tool", "reset"])
+    sp = subprocess.run([f"{DIRECTORY}/micromini-tool", "reset"])
     sp.check_returncode()
 
 
