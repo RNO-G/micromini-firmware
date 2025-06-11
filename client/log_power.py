@@ -30,6 +30,35 @@ def read_measurement():
     sp.check_returncode()
     return sp.stdout
 
+def read_rpm(threshold_value):
+
+    set_th_rising = subprocess.run([f"{DIRECTORY}/micromini-tool", "set-ain-rising-threshold", threshold_value], capture_output=False)
+    set_th_rising.check_returncode()
+    set_th_falling = subprocess.run([f"{DIRECTORY}/micromini-tool", "set-ain-falling-threshold", threshold_value], capture_output=False)
+    set_th_falling.check_returncode()
+
+    sp_rising = subprocess.run([f"{DIRECTORY}/micromini-tool", "get-ain-nrising"], capture_output=True)
+    sp_rising.check_returncode()
+    sp_falling = subprocess.run([f"{DIRECTORY}/micromini-tool", "get-ain-nfalling"], capture_output=True)
+    sp_falling.check_returncode()
+    sp_samples = subprocess.run([f"{DIRECTORY}/micromini-tool", "get-ain-num-samples"], capture_output=True)
+    sp_samples.check_returncode()
+    sp_sampling_rate = subprocess.run([f"{DIRECTORY}/micromini-tool", "get-ain-rate"], capture_output=True)
+    sp_sampling_rate.check_returncode()
+
+    rising_crossings = float(sp_rising.stdout.decode("utf-8").strip())
+    falling_crossings = float(sp_falling.stdout.decode("utf-8").strip())
+    num_samples = float(sp_samples.stdout.decode("utf-8").strip())
+    sampling_rate = float(sp_sampling_rate.stdout.decode("utf-8").strip())
+
+    seconds_per_minute = 60
+    crossings_per_rotation = 8
+
+    rpm_rising = rising_crossings * sampling_rate * seconds_per_minute / (crossings_per_rotation * num_samples)
+    rpm_falling = falling_crossings * sampling_rate * seconds_per_minute / (crossings_per_rotation * num_samples)
+
+    return [rpm_rising, rpm_falling]
+
 def read_ain():
     while True:
         sp = subprocess.run([f"{DIRECTORY}/micromini-tool", "get-ain-ready"], capture_output=True)
@@ -56,7 +85,7 @@ def write_to_file(fname, data, separator="\n"):
         f.write(separator)
 
 
-def parse_data(data):
+def parse_data(data, rpm_list):
     uptime_str, temperature_str, pv_str, wind_str, _ = data.split(b"\n")
 
     uptime_match = re.match(b'Measurement at uptime = ([0-9]*)', uptime_str)
@@ -81,6 +110,8 @@ def parse_data(data):
         "pv_A": float(pv_match.group(2)),
         "wind_V": float(wind_match.group(1)),
         "wind_A": float(wind_match.group(2)),
+        "rpm_rising": rpm_list[0],
+        "rpm_falling": rpm_list[1],
     }
 
     return data
@@ -99,8 +130,9 @@ def log_power():
             time.sleep(1)
 
             data = read_measurement()
+            rpm_list = read_rpm(0)
 
-            data = parse_data(data)
+            data = parse_data(data, rpm_list)
             write_to_file(fname, data)
         except subprocess.CalledProcessError as e:
             print(e)
