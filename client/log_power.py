@@ -52,7 +52,7 @@ def read_rpm(threshold_value):
     sampling_rate = float(sp_sampling_rate.stdout.decode("utf-8").strip())
 
     seconds_per_minute = 60
-    crossings_per_rotation = 8
+    crossings_per_rotation = 5
 
     rpm_rising = rising_crossings * sampling_rate * seconds_per_minute / (crossings_per_rotation * num_samples)
     rpm_falling = falling_crossings * sampling_rate * seconds_per_minute / (crossings_per_rotation * num_samples)
