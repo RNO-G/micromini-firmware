@@ -49,7 +49,7 @@ def read_rpm(threshold_value):
     rising_crossings = float(sp_rising.stdout.decode("utf-8").strip().split(":")[1].strip())
     falling_crossings = float(sp_falling.stdout.decode("utf-8").strip().split(":")[1].strip())
     num_samples = float(sp_samples.stdout.decode("utf-8").strip())
-    sampling_rate = float(sp_sampling_rate.stdout.decode("utf-8").strip())
+    sampling_rate = float(sp_sampling_rate.stdout.decode("utf-8").strip().split(":")[1].strip())
 
     seconds_per_minute = 60
     crossings_per_rotation = 5
