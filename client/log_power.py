@@ -130,7 +130,7 @@ def log_power():
             time.sleep(1)
 
             data = read_measurement()
-            rpm_list = read_rpm(0)
+            rpm_list = read_rpm('0')
 
             data = parse_data(data, rpm_list)
             write_to_file(fname, data)
