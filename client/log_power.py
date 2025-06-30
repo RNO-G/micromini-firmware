@@ -153,7 +153,7 @@ def log_power():
             time.sleep(1)
 
             data = read_measurement()
-            rpm_dict = read_rpm(set_threshold_value = '2048', set_sampling_rate = '98')
+            rpm_dict = read_rpm(set_threshold_value = '128', set_sampling_rate = '98')
 
             data = parse_data(data, rpm_dict)
             write_to_file(fname, data)
