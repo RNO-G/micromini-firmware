@@ -51,13 +51,20 @@ def read_rpm(threshold_value):
     num_samples = float(sp_samples.stdout.decode("utf-8").strip())
     sampling_rate = float(sp_sampling_rate.stdout.decode("utf-8").strip().split(":")[1].strip())
 
-    seconds_per_minute = 60
-    crossings_per_rotation = 5
+    rpm_dict = {}
+    rpm_dict['n_rising'] = rising_crossings
+    rpm_dict['n_falling'] = falling_crossings
+    rpm_dict['n_samples'] = num_samples
+    rpm_dict['sampling_rate'] = sampling_rate
 
-    rpm_rising = rising_crossings * sampling_rate * seconds_per_minute / (crossings_per_rotation * num_samples)
-    rpm_falling = falling_crossings * sampling_rate * seconds_per_minute / (crossings_per_rotation * num_samples)
+    #seconds_per_minute = 60
+    #crossings_per_rotation = 5
 
-    return [rpm_rising, rpm_falling]
+    #rpm_rising = rising_crossings * sampling_rate * seconds_per_minute / (crossings_per_rotation * num_samples)
+    #rpm_falling = falling_crossings * sampling_rate * seconds_per_minute / (crossings_per_rotation * num_samples)
+
+    #return [rpm_rising, rpm_falling]
+    return rpm_dict
 
 def read_ain():
     while True:
@@ -85,7 +92,7 @@ def write_to_file(fname, data, separator="\n"):
         f.write(separator)
 
 
-def parse_data(data, rpm_list):
+def parse_data(data, rpm_dict):
     uptime_str, temperature_str, pv_str, wind_str, _ = data.split(b"\n")
 
     uptime_match = re.match(b'Measurement at uptime = ([0-9]*)', uptime_str)
@@ -110,11 +117,13 @@ def parse_data(data, rpm_list):
         "pv_A": float(pv_match.group(2)),
         "wind_V": float(wind_match.group(1)),
         "wind_A": float(wind_match.group(2)),
-        "rpm_rising": rpm_list[0],
-        "rpm_falling": rpm_list[1],
-    }
+        #"rpm_rising": rpm_list[0],
+        #"rpm_falling": rpm_list[1],
+        }
 
-    return data
+    combined_data = {**data, **rpm_dict}
+
+    return combined_data
 
 
 def log_power():
@@ -130,9 +139,9 @@ def log_power():
             time.sleep(1)
 
             data = read_measurement()
-            rpm_list = read_rpm('0')
+            rpm_dict = read_rpm('0')
 
-            data = parse_data(data, rpm_list)
+            data = parse_data(data, rpm_dict)
             write_to_file(fname, data)
         except subprocess.CalledProcessError as e:
             print(e)
