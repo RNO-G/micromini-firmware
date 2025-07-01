@@ -71,7 +71,7 @@ def read_rpm(set_threshold_value, set_sampling_rate):
     seconds_per_minute = 60
     crossings_per_rotation = 5
     rpm_rising = rising_crossings * sampling_rate_hz * seconds_per_minute / (crossings_per_rotation * num_samples)
-    rpm_falling = falling_crossings * sampling_rate * seconds_per_minute / (crossings_per_rotation * num_samples)
+    rpm_falling = falling_crossings * sampling_rate_hz * seconds_per_minute / (crossings_per_rotation * num_samples)
 
     rpm_dict = {}
     rpm_dict['n_rising'] = rising_crossings
