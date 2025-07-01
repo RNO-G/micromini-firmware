@@ -71,7 +71,7 @@ def read_rpm(set_threshold_value, set_sampling_rate):
     seconds_per_minute = 60
     crossings_per_rotation = 5
     rpm_rising = rising_crossings * sampling_rate_hz * seconds_per_minute / (crossings_per_rotation * num_samples)
-    #rpm_falling = falling_crossings * sampling_rate * seconds_per_minute / (crossings_per_rotation * num_samples)
+    rpm_falling = falling_crossings * sampling_rate * seconds_per_minute / (crossings_per_rotation * num_samples)
 
     rpm_dict = {}
     rpm_dict['n_rising'] = rising_crossings
@@ -79,6 +79,7 @@ def read_rpm(set_threshold_value, set_sampling_rate):
     rpm_dict['n_samples'] = num_samples
     rpm_dict['sampling_rate_hz'] = sampling_rate_hz
     rpm_dict['rpm_rising'] = rpm_rising
+    rpm_dict['rpm_falling'] = rpm_falling
 
     return rpm_dict
 
@@ -153,7 +154,7 @@ def log_power():
             time.sleep(1)
 
             data = read_measurement()
-            rpm_dict = read_rpm(set_threshold_value = '250', set_sampling_rate = '98')
+            rpm_dict = read_rpm(set_threshold_value = '128', set_sampling_rate = '98')
 
             data = parse_data(data, rpm_dict)
             write_to_file(fname, data)
