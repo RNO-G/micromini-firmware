@@ -32,15 +32,30 @@ def read_measurement():
 
 def read_rpm(set_threshold_value, set_sampling_rate):
 
-    #should be at 0V (set to 2048 which should be half of the ADC range)
+    rpm_dict = {}
+
+    #should be at 0V (set to 128 which should be half of the ADC range)
     set_th_rising = subprocess.run([f"{DIRECTORY}/micromini-tool", "set-ain-rising-threshold", set_threshold_value], capture_output=False)
     set_th_rising.check_returncode()
     set_th_falling = subprocess.run([f"{DIRECTORY}/micromini-tool", "set-ain-falling-threshold", set_threshold_value], capture_output=False)
     set_th_falling.check_returncode()
-    
-    #should be rougly at 170HZ such that we can measure between 5 and 1000 rpm with 400 samples (set to 98 which should come out to this frequency)
-    set_sr = subprocess.run([f"{DIRECTORY}/micromini-tool", "set-ain-rate", set_sampling_rate], capture_output=False)
-    set_sr.check_returncode()
+
+    sp_sampling_rate = subprocess.run([f"{DIRECTORY}/micromini-tool", "get-ain-rate"], capture_output=True)
+    sp_sampling_rate.check_returncode()
+
+    #"Get AIN rate configuration (bits 0-2: ADC prescaler, bits 3-7 SAMPLELEN)"
+    raw = sp_sampling_rate.stdout.decode("utf-8").strip().split(":")[1].strip()
+
+    if raw != set_sampling_rate:
+        #should be rougly at 170HZ such that we can measure between 5 and 1000 rpm with 400 samples (set to 98 which should come out to this frequency)
+        set_sr = subprocess.run([f"{DIRECTORY}/micromini-tool", "set-ain-rate", set_sampling_rate], capture_output=False)
+        set_sr.check_returncode()
+
+    is_ready = subprocess.run([f"{DIRECTORY}/micromini-tool", "get-ain-ready"], capture_output=True)
+    is_ready.check_returncode()
+
+    if is_ready == False:
+        return rpm_dict
 
     sp_rising = subprocess.run([f"{DIRECTORY}/micromini-tool", "get-ain-nrising"], capture_output=True)
     sp_rising.check_returncode()
@@ -55,11 +70,8 @@ def read_rpm(set_threshold_value, set_sampling_rate):
     falling_crossings = float(sp_falling.stdout.decode("utf-8").strip().split(":")[1].strip())
     num_samples = float(sp_samples.stdout.decode("utf-8").strip())
 
-    #"Get AIN rate configuration (bits 0-2: ADC prescaler, bits 3-7 SAMPLELEN)"
-    raw = int(sp_sampling_rate.stdout.decode("utf-8").strip().split(":")[1].strip())
-
-    prescaler_bits = raw & 0b00000111
-    samplelen_bits = (raw >> 3) & 0b00011111
+    prescaler_bits = int(raw) & 0b00000111
+    samplelen_bits = (int(raw) >> 3) & 0b00011111
 
     prescaler_dividers = [2, 4, 8, 16, 32, 64, 128, 256]
     divider = prescaler_dividers[prescaler_bits]
@@ -73,7 +85,6 @@ def read_rpm(set_threshold_value, set_sampling_rate):
     rpm_rising = rising_crossings * sampling_rate_hz * seconds_per_minute / (crossings_per_rotation * num_samples)
     rpm_falling = falling_crossings * sampling_rate_hz * seconds_per_minute / (crossings_per_rotation * num_samples)
 
-    rpm_dict = {}
     rpm_dict['n_rising'] = rising_crossings
     rpm_dict['n_falling'] = falling_crossings
     rpm_dict['n_samples'] = num_samples
