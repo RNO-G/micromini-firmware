@@ -14,12 +14,12 @@ micromini-tool: micromini-tool.c
 	$(CC) -Wall -o $@ -g -Os $^
 
 #this doesn't need sudo unless /rno-g/bin has wrong permissions
-install:
+install: micromini-tool
 	install micromini-tool /rno-g/bin
 	install log_power.py /rno-g/bin
 
 # these need sudo
-completion-install:
+completion-install: micromini-tool.completions
 	install micromini-tool.completions /etc/bash_completion.d/micromini-tool
 
 service-install: micromini-tool
