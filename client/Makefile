@@ -1,6 +1,7 @@
 .PHONY: all clean
 
-all: micromini-tool micromini-tool.completions service-install
+all: micromini-tool micromini-tool.completions
+
 clean:
 	rm -f micromini-tool micromini-tool.completions
 
@@ -12,6 +13,15 @@ micromini-tool.completions: micromini-tool
 micromini-tool: micromini-tool.c
 	$(CC) -Wall -o $@ -g -Os $^
 
+#this doesn't need sudo unless /rno-g/bin has wrong permissions
+install:
+	install micromini-tool /rno-g/bin
+	install log_power.py /rno-g/bin
+
+# these need sudo
+completion-install:
+	install micromini-tool.completions /etc/bash_completion.d/micromini-tool
+
 service-install: micromini-tool
-	install *.service /etc/systemd/system
-	systemctl daemon-reload
+	sudo install *.service /etc/systemd/system
+	sudo systemctl daemon-reload
