@@ -1,7 +1,12 @@
 [Unit]
 Description=Take and copy monitoring data of the 2024 power system
+After=rno-g-init-log-power.service
+Requires=rno-g-init-log-power.service 
 
 [Service]
 User=rno-g
 Restart=always
 ExecStart=/usr/bin/python3 /rno-g/bin/log_power.py
+
+[Install]
+WantedBy=multi-user.target  
