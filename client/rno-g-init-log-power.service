@@ -1,0 +1,10 @@
+[Unit]                                                  
+Description=Initializing the 2024 power system          
+
+[Service]                                               
+Type=oneshot                                            
+ExecStart=/home/rno-g/micromini-firmware/client/init_log_power.sh                  
+RemainAfterExit=yes                                     
+
+[Install]                                               
+WantedBy=multi-user.target 
